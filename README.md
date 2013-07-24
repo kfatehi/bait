@@ -48,8 +48,54 @@ As a Ruby on Rails developer, this was invaluable... But the iOS developers we h
 
 Fast forward a year or so later and the app is complex, has no test suite, and our poor QA testers cannot keep up.
 
-Scribbeo-motion proved that this works, and so RMTS is a continuous integration service where RubyMotion is first-class.
+Scribbeo-motion proved that this works, and so RMTS is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
 
-RMTS is the CI server (running on a mac), it is an endpoint for the github push event webhook
+## Github integration
 
-On request from github, RMTS pulls the obj-c project, wraps it as a rubymotion app, and runs the specs (written in Ruby)
+RMTS provides a Sinatra endpoint for the github push event webhook.
+
+## Tooling Support
+
+### Rails
+
+Rails will be supported by RMTS
+
+### RubyMotion
+
+Rubymotion is a first class citizen. 
+
+This means RMTS can execute its test suite and update Redis about that run.
+
+The only configuration necessary is to create a .rmts file or folder in the repository.
+
+### Objective-C
+
+Objective-C is the baby brother of RubyMotion. These apps need to grow up into RubyMotion apps before RMTS can run a RubyMotion-style test suite.
+
+This growing up process occurs based on the files and folders beneath the definitions folder, `.rmts/`
+
+## Definitions
+
+The folder `.rmts/` should be in your project root. An objective-c project is expected to contain:
+* `.rmts/Grow` is an executable script that deploys a rubymotion app into `.rmts/build/`
+* 
+*
+* `.rmts/spec/` standard RubyMotion specs go here
+
+### Grow file
+
+This can be written in any scripting language langauge you want and will be executed with Open3 in Ruby within the context of an 
+
+which is created and should be added to gitignore
+
+### 
+* standard RubyMotion specs/ directory
+
+
+### 
+
+## Static Code Analysis
+
+http://metric-fu.rubyforge.org/
+
+http://oclint.org/
