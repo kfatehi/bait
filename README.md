@@ -1,7 +1,7 @@
 rmts
 ====
 
-RubyMotion Test Service (aka Rubyriffic Magical Testing System)
+RubyMotion Test Service (aka Radical Metrical Test Sorcery)
 
 ## Architecture Overview
 
@@ -9,7 +9,7 @@ RubyMotion Test Service (aka Rubyriffic Magical Testing System)
 Github POST rmts:80/gh_user/gh_project
       |
   +---+---+                +-----------------------+
-  |Sinatra|--------------->|RTMS::Build.new(params)|
+  |Sinatra|--------------->|RMTS::Build.new(params)|
   +-------+                +---------------+-------+
                                            |
                                            |
