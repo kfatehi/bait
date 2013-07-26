@@ -7,8 +7,7 @@ describe "Sinatra App" do
   end
 
   describe "github post-receive hook" do
-    let(:github_json) do
-      <<-GITHUB_JSON
+    let(:github_json) do <<-GITHUB_JSON
       { 
         "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
         "repository": {
@@ -42,8 +41,12 @@ describe "Sinatra App" do
         "after": "de8251ff97ee194a289832576287d6f8ad74e3d0",
         "ref": "refs/heads/master" 
       }
-      GITHUB_JSON
-    end
+    GITHUB_JSON
+  end
+
+   it "accepts the payload" do
+     
+   end
   end
 
 end
