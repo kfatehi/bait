@@ -18,7 +18,7 @@ Scribbeo-motion proved that this works, and so RMTS is a service I'm envisioning
 # Architectural Overview
 
 ```
-            Github POST rmts:80/gh_user/gh_project
+                      Github POST rmts:80/
 ______________________        \./
 |  Mac OS X 10.8     |         |
 |   w/ RubyMotion    |         |
@@ -32,7 +32,7 @@ ______________________        \./
 |                    +------+-----+----------+  |
 |                           |     |             |
 |                           |     |             |
-|                           |     |             |
+|                          \|/   /|\            |
 |                           |     |             |
 |                           |     |             |
 |                          ++-----++            |
