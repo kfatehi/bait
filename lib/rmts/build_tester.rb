@@ -18,11 +18,11 @@ module Rmts
     end
 
     def rmts_dir
-      reliable_path clone_path, ".rmts", NoRmtsDirError
+      required_path clone_path, ".rmts", NoRmtsDirError
     end
 
     def rmts_test_script
-      reliable_path rmts_dir, "test.sh", NoTestScriptError
+      required_path rmts_dir, "test.sh", NoTestScriptError
     end
 
     def test!
@@ -61,9 +61,9 @@ module Rmts
 
     private
 
-    def reliable_path parent, name, error=StandardError
+    def required_path parent, name, error=StandardError
       path = File.join(parent, name)
-      if Dir.exists?(path)
+      if File.exists?(path)
         path
       else
         raise error

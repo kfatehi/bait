@@ -56,10 +56,16 @@ ______________________        \./
 
 RMTS provides a Sinatra endpoint for the github push event webhook.
 
-When the repo is cloned, an RMTS::Tester looks for 3 things:
-* Gemfile
-* `spec/` folder
-* `.rmts/` folder
+When the repo is cloned, an RMTS executes a file relative to your
+project. This file must exist in order to use RMTS: `.rmts/test.sh`
+
+## .rmts/test.sh
+
+In this file you will run your test suite. **Be sure to make it
+executable `chmod a+x .rmts/test.sh`**
+
+This file should output whatever you want to STDOUT/STDERR and return
+the correct exit value.
 
 ## Project Support
 
@@ -97,7 +103,7 @@ Output accumulated in this stage of the `RMTS::BuildProcess` will be saved to Re
 
 ### .rmts/build/*
 
-This should be added to your .gitignore and is where your rubymotion app will reside
+This should be added to your .gitignore and is where your rubymotion app will be built
 
 ### .rmts/spec/
 
