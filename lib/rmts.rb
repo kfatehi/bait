@@ -1,5 +1,6 @@
 require "rmts/version"
 require 'moneta'
+require 'fileutils'
 
 module Rmts
   def self.storage_dir
