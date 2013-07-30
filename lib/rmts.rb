@@ -1,23 +1,29 @@
 require "rmts/version"
 require 'moneta'
-
-# Person.adapter :memory, Moneta.new(:File, :dir => 'moneta')
+require 'fileutils'
 
 module Rmts
-  def self.db_dir
+  def self.storage_dir
     path = File.join("#{self.home}", "#{self.env}")
     FileUtils.mkdir_p path
+    path
+  end
+
+  def self.db_dir
+    db_dir = File.join Rmts.storage_dir, "databases"
+    FileUtils.mkdir_p db_dir
+    db_dir
   end
 
   def self.db_file name
-    yaml_file = File.join Rmts.db_dir, "#{name}.yaml"
+    yaml_file = File.join self.db_dir, "#{name}.yaml"
     FileUtils.touch yaml_file
     yaml_file
   end
 
   def self.store
     @store ||= begin
-      Moneta.new :YAML, :file => db_file("rmts")
+      Moneta.new :YAML, :file => db_file("main")
     end
   end
 

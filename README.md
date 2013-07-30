@@ -56,60 +56,42 @@ ______________________        \./
 
 RMTS provides a Sinatra endpoint for the github push event webhook.
 
-When the repo is cloned, an RMTS::Tester looks for 3 things:
-* Gemfile
-* `spec/` folder
-* `.rmts/` folder
+When the repo is cloned, an RMTS executes a file relative to your
+project. This file must exist in order to use RMTS: `.rmts/test.sh`
 
-## Project Support
+## .rmts/test.sh
 
-### Rails
+In this file you will run your test suite. **Be sure to make it
+executable `chmod a+x .rmts/test.sh`**
 
-Supported out of the box.
+This file should output whatever you want to STDOUT/STDERR and return
+the correct exit value.
 
-### RubyMotion
+### Example
 
-Supported out of the box.
+```bash
+#!/bin/bash
+rmts_dir=$(dirname $0)
+project_dir="$rmts_dir/.."
+cd $project_dir
+bundle
+bundle exec rspec spec
+```
 
-### Objective-C
+## Objective-C ?
 
-An Objective-C iOS project cloned is seen as a baby brother to RubyMotion. These apps need to grow up into full-fledged RubyMotion apps before RMTS can run use MacBacon to test it.
+So you can see how RMTS will run any test suite via arbitrary bash
+scripts upon a Github hook.
 
-This growing up process occurs based on the files and folders beneath the definitions folder, `.rmts/`
+But how exactly will it help add a ruby test suite to an Obj-C app?
 
-## .rmts/
-
-The folder `.rmts/` should be in your objective-c project and contain:
-* `.rmts/Growfile`
-* `.rmts/spec/` standard RubyMotion specs
-
-### .rmts/Growfile
-
-This is essential to making an Objective-C iOS application compatible with RMTS.
-
-It must be an executable script that generates a valid rubymotion app at `.rmts/build/`
-
-This can be written in any scripting language you prefer, but will likely be in bash.
-
-It will be executed with Open3 in ruby by the RMTS::Grower. It must return a clean exit value to be passed on to an RMTS:::Tester
-
-Output accumulated in this stage of the `RMTS::BuildProcess` will be saved to Redis
-
-### .rmts/build/*
-
-This should be added to your .gitignore and is where your rubymotion app will reside
-
-### .rmts/spec/
-
-This is a standard RubyMotion spec/ directory
+Watch this spot for some examples soon; essentially we'll be doing this
+in Ruby using RMTS::Wrap::ObjC or some such :)
 
 # Future
 
 ## Static Code Analysis
 
 Integrate [metric-fu](http://metric-fu.rubyforge.org/) for ruby apps and [OCLint](http://oclint.org/) for objective-c apps. Report these in Redis.
-
-## 
-
 
 

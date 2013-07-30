@@ -46,9 +46,19 @@ describe "Sinatra App" do
     end
 
     describe "POST /" do
-      it "creates a build" do
+      let (:build) { Rmts::Build.last }
+      before do
         post '/', payload: github_json
-        Rmts::Build.last.name.should eq "github"
+      end
+
+      it { should be_ok }
+
+      it "creates a build" do
+        build.name.should eq "github"
+      end
+
+      it "will be tested later based on a flag" do
+        build.should_not be_tested
       end
     end
   end
