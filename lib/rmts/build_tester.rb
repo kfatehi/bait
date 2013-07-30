@@ -6,29 +6,27 @@ require 'open3'
 
 module Rmts
   class BuildTester
-    class NotClonedError < StandardError ; end
-    class NoRmtsDirError < StandardError ; end
-    class NoTestScriptError < StandardError ; end
     attr_reader :passed
 
     def initialize build
       @build = build
       @cloned = false
-      @passed = nil
     end
 
     def rmts_dir
-      required_path clone_path, ".rmts", NoRmtsDirError
+      File.join(clone_path, ".rmts")
     end
 
-    def rmts_test_script
-      required_path rmts_dir, "test.sh", NoTestScriptError
+    def script
+      File.join(rmts_dir, "test.sh")
     end
 
     def test!
-      raise NotClonedError unless cloned?
-      @stdout, @stderr, s = Open3.capture3(rmts_test_script)
-      @passed = s.exitstatus == 0
+      stdout, stderr, s = Open3.capture3(script)
+      @build.passed = s.exitstatus == 0
+      @build.stdout = stdout
+      @build.stderr = stderr
+      @build.save
     end
 
     def clone_path
@@ -54,17 +52,6 @@ module Rmts
       @sandbox_directory ||= begin
         dir = File.join Rmts.storage_dir, "build_tester", @build.id
         FileUtils.mkdir_p(dir) && dir
-      end
-    end
-
-    private
-
-    def required_path parent, name, error=StandardError
-      path = File.join(parent, name)
-      if File.exists?(path)
-        path
-      else
-        raise error
       end
     end
   end

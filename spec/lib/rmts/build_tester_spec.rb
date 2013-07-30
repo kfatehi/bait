@@ -7,51 +7,56 @@ describe Rmts::BuildTester do
     File.expand_path(path)
   end
   let(:build) { Rmts::Build.create(name: "rmts", clone_url:repo_path) }
-  subject { build.tester }
+  let(:tester) { build.tester }
 
   describe "#sandbox_directory" do
     it "creates a directory on disk" do
-      Dir.exists?(subject.sandbox_directory).should be_true
+      Dir.exists?(tester.sandbox_directory).should be_true
     end
 
     it "is beneath Rmts storage directory" do
-      subject.sandbox_directory.should match Rmts.storage_dir
+      tester.sandbox_directory.should match Rmts.storage_dir
     end
   end
 
   describe "#cloned?" do
-    it { should_not be_cloned }
+    specify { tester.should_not be_cloned }
   end
 
   describe "#clone!" do
-    before { subject.clone! }
-    it { should be_cloned }
+    before { tester.clone! }
+    specify { tester.should be_cloned }
   end
 
   describe "#test!" do
-    before do
-      subject.clone!
+    shared_examples_for "a test run" do
+      it "saves stdout into the build" do
+        build.stdout.should eq "this is a test script\n"
+      end
+      it "saves stderr into the build" do
+        build.stderr.should be_empty
+      end
     end
+    before do
+      tester.clone!
+      FileUtils.mkdir tester.rmts_dir
+    end
+    subject { build.reload }
     context "successful" do
       before do
-        binding.pry
-        File.open(subject.rmts_test_script, "w") do |script|
-          script.print "#!/bin/bash"
-          script.puts "exit 0"
-        end
-        subject.test!
+        write_script_with_status tester.script, 0
+        tester.test!
       end
-      specify { subject.passed.should be_true }
+      it { should be_passed }
+      it_behaves_like "a test run"
     end
     context 'failure' do
       before do
-        File.open(subject.rmts_test_script, "w") do |script|
-          script.print "#!/bin/bash"
-          script.puts "exit 1"
-        end
-        subject.test!
+        write_script_with_status tester.script, 1
+        tester.test!
       end
-      specify { subject.passed.should be_false }
+      it { should_not be_passed }
+      it_behaves_like "a test run"
     end
   end
 end

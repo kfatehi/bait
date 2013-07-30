@@ -45,4 +45,11 @@ describe Rmts::Build do
       build.tester.should be_a Rmts::BuildTester
     end
   end
+
+  describe "#passed" do
+    it "starts as nil" do
+      build = Rmts::Build.create(name: "app")
+      build.passed.should be_nil
+    end
+  end
 end

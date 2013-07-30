@@ -17,8 +17,11 @@ def clear_db
   end
 end
 
+require 'support/script_maker'
+
 RSpec.configure do |config|
   config.before(:suite) { clear_storage }
   config.before(:each) { clear_db }
+  config.include Rmts::SpecHelpers::ScriptMaker
   config.include Rack::Test::Methods
 end

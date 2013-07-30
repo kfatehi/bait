@@ -13,6 +13,9 @@ module Rmts
 
     attribute :name, String
     attribute :clone_url, String
+    attribute :passed, Boolean
+    attribute :stdout, String
+    attribute :stderr, String
 
     def tester
       @tester ||= Rmts::BuildTester.new(self)
