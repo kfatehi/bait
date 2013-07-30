@@ -14,10 +14,10 @@ Listing Builds
           Queued
       .stdout
         Output:
-        = build.stdout
+        %pre= build.stdout
       .stderr
         Errors:
-        = build.stderr
+        %pre= build.stderr
       .actions
         %a{href:"/build/remove/#{build.id}"} Remove
 
