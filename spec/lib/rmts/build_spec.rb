@@ -33,4 +33,11 @@ describe Rmts::Build do
       end
     end
   end
+
+  describe "#tester" do
+    it "returns an Rmts::BuildTester" do
+      build = Rmts::Build.create(name: "app")
+      build.tester.should be_a Rmts::BuildTester
+    end
+  end
 end
