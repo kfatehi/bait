@@ -67,55 +67,31 @@ executable `chmod a+x .rmts/test.sh`**
 This file should output whatever you want to STDOUT/STDERR and return
 the correct exit value.
 
-## Project Support
+### Example
 
-### Rails
+```bash
+#!/bin/bash
+rmts_dir=$(dirname $0)
+project_dir="$rmts_dir/.."
+cd $project_dir
+bundle
+bundle exec rspec spec
+```
 
-Supported out of the box.
+## Objective-C ?
 
-### RubyMotion
+So you can see how RMTS will run any test suite via arbitrary bash
+scripts upon a Github hook.
 
-Supported out of the box.
+But how exactly will it help add a ruby test suite to an Obj-C app?
 
-### Objective-C
-
-An Objective-C iOS project cloned is seen as a baby brother to RubyMotion. These apps need to grow up into full-fledged RubyMotion apps before RMTS can run use MacBacon to test it.
-
-This growing up process occurs based on the files and folders beneath the definitions folder, `.rmts/`
-
-## .rmts/
-
-The folder `.rmts/` should be in your objective-c project and contain:
-* `.rmts/Growfile`
-* `.rmts/spec/` standard RubyMotion specs
-
-### .rmts/Growfile
-
-This is essential to making an Objective-C iOS application compatible with RMTS.
-
-It must be an executable script that generates a valid rubymotion app at `.rmts/build/`
-
-This can be written in any scripting language you prefer, but will likely be in bash.
-
-It will be executed with Open3 in ruby by the RMTS::Grower. It must return a clean exit value to be passed on to an RMTS:::Tester
-
-Output accumulated in this stage of the `RMTS::BuildProcess` will be saved to Redis
-
-### .rmts/build/*
-
-This should be added to your .gitignore and is where your rubymotion app will be built
-
-### .rmts/spec/
-
-This is a standard RubyMotion spec/ directory
+Watch this spot for some examples soon; essentially we'll be doing this
+in Ruby using RMTS::Wrap::ObjC or some such :)
 
 # Future
 
 ## Static Code Analysis
 
 Integrate [metric-fu](http://metric-fu.rubyforge.org/) for ruby apps and [OCLint](http://oclint.org/) for objective-c apps. Report these in Redis.
-
-## 
-
 
 

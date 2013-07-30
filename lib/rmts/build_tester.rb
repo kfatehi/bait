@@ -27,10 +27,8 @@ module Rmts
 
     def test!
       raise NotClonedError unless cloned?
-      out, err, status = Open3.capture3(rmts_test_script)
-      require 'pry'; binding.pry
-      
-      @passed = false
+      @stdout, @stderr, s = Open3.capture3(rmts_test_script)
+      @passed = s.exitstatus == 0
     end
 
     def clone_path

@@ -31,12 +31,26 @@ describe Rmts::BuildTester do
   describe "#test!" do
     before do
       subject.clone!
-      subject.test!
     end
     context "successful" do
+      before do
+        binding.pry
+        File.open(subject.rmts_test_script, "w") do |script|
+          script.print "#!/bin/bash"
+          script.puts "exit 0"
+        end
+        subject.test!
+      end
       specify { subject.passed.should be_true }
     end
     context 'failure' do
+      before do
+        File.open(subject.rmts_test_script, "w") do |script|
+          script.print "#!/bin/bash"
+          script.puts "exit 1"
+        end
+        subject.test!
+      end
       specify { subject.passed.should be_false }
     end
   end
