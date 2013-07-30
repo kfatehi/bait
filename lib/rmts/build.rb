@@ -11,6 +11,9 @@ module Rmts
     @@db_file = Rmts.db_file('builds')
     adapter :memory, Moneta.new(:YAML, :file => @@db_file)
 
+    attribute :ref, String
+    attribute :owner_name, String
+    attribute :owner_email, String
     attribute :name, String
     attribute :clone_url, String
     attribute :passed, Boolean

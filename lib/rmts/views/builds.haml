@@ -1,0 +1,18 @@
+%ul
+  - @builds.each do |build|
+    %li
+      .name= build.name
+      %a.clone_url{href:build.clone_url}= build.clone_url
+      .ref= build.ref
+      .status
+        Status:
+        - if build.tested?
+          = build.passed? ? "Passed!" : "Failed!"
+        - else
+          Queued
+      .stdout
+        Output:
+        = build.stdout
+      .stderr
+        Errors:
+        = build.stderr

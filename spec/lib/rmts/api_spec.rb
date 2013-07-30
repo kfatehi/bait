@@ -55,10 +55,28 @@ describe "Sinatra App" do
 
       it "creates a build" do
         build.name.should eq "github"
+        build.owner_name.should eq "defunkt"
+        build.owner_email.should eq "chris@ozmm.org"
+        build.ref.should eq "refs/heads/master"
       end
 
       it "will be tested later based on a flag" do
         build.should_not be_tested
+      end
+    end
+
+    describe "GET /" do
+      before do
+        Rmts::Build.create(name: "quickfox")
+        Rmts::Build.create(name: "slowsloth")
+        get '/'
+      end
+
+      it { should be_ok }
+
+      it "shows the builds" do
+        subject.body.should match /quickfox/
+        subject.body.should match /slowsloth/
       end
     end
   end
