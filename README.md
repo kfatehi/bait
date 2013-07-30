@@ -1,9 +1,9 @@
-Rmts
+Bait
 ====
 
-RubyMotion Test Service (aka Radical Metrical Test Sorcery)
+`bait` is a build and integration tester
 
-# Inspiration
+# Backstory
 
 https://github.com/DFTi/Scribbeo-motion already is designed in such a way that it vendors our existing iOS (completely written in Objective-C) application https://github.com/DFTi/Critique
 
@@ -24,28 +24,26 @@ ______________________        \./
 |   w/ RubyMotion    |         |
 |  ----------------  +---------+----------------+
 |                          +---+---+            |
-|                          |Sinatra|            |
+|                          |  API  |----[haml]------- you
 |                          +---+---+            |
 |                              |                |
 |                       +---------+--+          |
-|                       |Rmts::Build |          |
+|                       |Bait::Build |          |
 |                       +---+-----+--+          |
-|                           |     |             |
-|                           |     |             |
 |                          \|/   /|\            |
-|                           |     |             |
-|                           |     |             |
+|                          \|/   /|\            |
+|                          \[build]\            |
+|                          \|/   /|\            |
+|                          \|/   /|\            |
 |                        +------------+         |
-|   [.rmts/test.sh]------|Rmts::Tester|         |
+|   [.bait/test.sh]------|Bait::Tester|         |
 |                        +------------+         |
 |                                               |
 +-----------------------------------------------+
 
-   Rmts::Build -- Determine what kind of project it is.
-                  Do a pre-flight check, and enqueue in Redis.
+   Bait::Build -- Persistent ToyStore
 
-   Rmts::Tester -- Bootstrap and run test suite.
-                   Read exit value and update record in Redis.
+   Bait::Tester -- Runs your tests and updates build accordingly
 ```
 
 *Created with [JavE](http://www.jave.de/)*
