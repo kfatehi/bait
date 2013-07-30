@@ -2,25 +2,42 @@ require 'spec_helper'
 require 'rmts/build_tester'
 
 describe Rmts::BuildTester do
-  let(:build) { Rmts::Build.create(name: "testable") }
-  let(:tester) { build.tester }
+  let(:repo_path) do
+    path = File.join(File.dirname(__FILE__), '..', '..', '..')
+    File.expand_path(path)
+  end
+  let(:build) { Rmts::Build.create(name: "rmts", clone_url:repo_path) }
+  subject { build.tester }
 
   describe "#sandbox_directory" do
     it "creates a directory on disk" do
-      Dir.exists?(tester.sandbox_directory).should be_true
+      Dir.exists?(subject.sandbox_directory).should be_true
     end
 
     it "is beneath Rmts storage directory" do
-      tester.sandbox_directory.should match Rmts.storage_dir
+      subject.sandbox_directory.should match Rmts.storage_dir
     end
   end
 
+  describe "#cloned?" do
+    it { should_not be_cloned }
+  end
+
   describe "#clone!" do
-    it "clones the project into the sandbox" do
-      tester.clone!
-      tester.sandbox_contents.should have(1).item
-      gitdir = File.join(tester.sandbox_contents, ".git/")
-      Dir.exists?(gitdir).should be_true
+    before { subject.clone! }
+    it { should be_cloned }
+  end
+
+  describe "#test!" do
+    before do
+      subject.clone!
+      subject.test!
+    end
+    context "successful" do
+      specify { subject.passed.should be_true }
+    end
+    context 'failure' do
+      specify { subject.passed.should be_false }
     end
   end
 end

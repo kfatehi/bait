@@ -12,6 +12,7 @@ module Rmts
     adapter :memory, Moneta.new(:YAML, :file => @@db_file)
 
     attribute :name, String
+    attribute :clone_url, String
 
     def tester
       @tester ||= Rmts::BuildTester.new(self)
