@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rmts (0.0.1)
+    rmts (0.1.0)
       git
       haml
       moneta
