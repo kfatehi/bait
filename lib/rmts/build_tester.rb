@@ -22,11 +22,17 @@ module Rmts
     end
 
     def test!
-      stdout, stderr, s = Open3.capture3(script)
-      @build.passed = s.exitstatus == 0
-      @build.stdout = stdout
-      @build.stderr = stderr
-      @build.save
+      begin
+        stdout, stderr, s = Open3.capture3(script)
+        @build.tested = true
+        @build.passed = s.exitstatus == 0
+        @build.stdout = stdout
+        @build.stderr = stderr
+      rescue Errno::ENOENT => ex
+        @build.stderr = "A test script was expected but missing.\nError: #{ex.message}"
+      ensure
+        @build.save
+      end
     end
 
     def clone_path

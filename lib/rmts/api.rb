@@ -9,7 +9,7 @@ module Rmts
         push = JSON.parse(params["payload"])
         Rmts::Build.create({
           name: push["repository"]["name"]
-        })
+        }).test_later
       end
     end
   end
