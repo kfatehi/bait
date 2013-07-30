@@ -1,9 +1,9 @@
 require 'sinatra'
 require 'haml'
 require 'json'
-require 'rmts/build'
+require 'bait/build'
 
-module Rmts
+module Bait
   class Api < Sinatra::Base
     get '/' do
       redirect '/build'
@@ -12,7 +12,7 @@ module Rmts
     post '/' do
       if params && params["payload"]
         push = JSON.parse(params["payload"])
-        Rmts::Build.create({
+        Bait::Build.create({
           name: push["repository"]["name"],
           clone_url: push["repository"]["url"],
           owner_name: push["repository"]["owner"]["name"],
@@ -23,12 +23,12 @@ module Rmts
     end
 
     get '/build' do
-      @builds = Rmts::Build.all
+      @builds = Bait::Build.all
       haml :builds
     end
 
     post '/build/create' do
-      build = Rmts::Build.create(clone_url:params["clone_url"], name:'test')
+      build = Bait::Build.create(clone_url:params["clone_url"], name:'test')
       build.test_later
       redirect '/build'
     end

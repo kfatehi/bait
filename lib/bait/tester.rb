@@ -1,10 +1,10 @@
-require 'rmts'
-require 'rmts/build'
+require 'bait'
+require 'bait/build'
 require 'git'
 require 'logger'
 require 'open3'
 
-module Rmts
+module Bait
   class Tester
     attr_reader :passed
 
@@ -13,12 +13,12 @@ module Rmts
       @cloned = false
     end
 
-    def rmts_dir
-      File.join(clone_path, ".rmts")
+    def bait_dir
+      File.join(clone_path, ".bait")
     end
 
     def script
-      File.join(rmts_dir, "test.sh")
+      File.join(bait_dir, "test.sh")
     end
 
     def test!
@@ -59,7 +59,7 @@ module Rmts
 
     def sandbox_directory
       @sandbox_directory ||= begin
-        dir = File.join Rmts.storage_dir, "build_tester", @build.id
+        dir = File.join Bait.storage_dir, "build_tester", @build.id
         FileUtils.mkdir_p(dir) && dir
       end
     end

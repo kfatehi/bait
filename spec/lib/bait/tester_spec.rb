@@ -1,12 +1,12 @@
 require 'spec_helper'
-require 'rmts/tester'
+require 'bait/tester'
 
-describe Rmts::Tester do
+describe Bait::Tester do
   let(:repo_path) do
     path = File.join(File.dirname(__FILE__), '..', '..', '..')
     File.expand_path(path)
   end
-  let(:build) { Rmts::Build.create(name: "rmts", clone_url:repo_path) }
+  let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
   let(:tester) { build.tester }
 
   describe "#sandbox_directory" do
@@ -14,8 +14,8 @@ describe Rmts::Tester do
       Dir.exists?(tester.sandbox_directory).should be_true
     end
 
-    it "is beneath Rmts storage directory" do
-      tester.sandbox_directory.should match Rmts.storage_dir
+    it "is beneath Bait storage directory" do
+      tester.sandbox_directory.should match Bait.storage_dir
     end
   end
 
@@ -53,7 +53,7 @@ describe Rmts::Tester do
         tester.test!
       end
       it { should_not be_tested }
-      it "has Rmts errors in stderr" do
+      it "has Bait errors in stderr" do
         subject.stderr.should match /script was expected but missing/
       end
     end

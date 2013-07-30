@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'rmts/api'
-require 'rmts/build'
+require 'bait/api'
+require 'bait/build'
 
 describe "Sinatra App" do
-  let(:app) { Rmts::Api }
+  let(:app) { Bait::Api }
   subject { last_response }
 
   describe "github post-receive hook" do
@@ -45,7 +45,7 @@ describe "Sinatra App" do
       GITHUB_JSON
     end
 
-    let (:build) { Rmts::Build.last }
+    let (:build) { Bait::Build.last }
 
     describe "POST /" do
       before do
@@ -73,8 +73,8 @@ describe "Sinatra App" do
 
     describe "GET /build" do
       before do
-        Rmts::Build.create(name: "quickfox", clone_url:'...')
-        Rmts::Build.create(name: "slowsloth", clone_url:'...')
+        Bait::Build.create(name: "quickfox", clone_url:'...')
+        Bait::Build.create(name: "slowsloth", clone_url:'...')
         get '/build'
       end
 
@@ -96,7 +96,7 @@ describe "Sinatra App" do
 
     describe "GET /build/remove/#" do
       before do
-        @build = Rmts::Build.create(name: "quickfox", clone_url:'...')
+        @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       end
       it "removes builds from the store" do
         get "/build/remove/#{@build.id}"

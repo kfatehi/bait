@@ -1,4 +1,4 @@
-module Rmts
+module Bait
   module SpecHelpers
     module ScriptMaker
       def write_script_with_status script, status

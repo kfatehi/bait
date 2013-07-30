@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'rmts/build'
+require 'bait/build'
 
-describe Rmts::Build do
-    subject { Rmts::Build }
+describe Bait::Build do
+    subject { Bait::Build }
 
   describe ".all" do
     context "with nothing in the store" do
@@ -39,10 +39,10 @@ describe Rmts::Build do
     end
   end
 
-  let (:build) { Rmts::Build.create(name: "app", clone_url:'...') }
+  let (:build) { Bait::Build.create(name: "app", clone_url:'...') }
 
   describe "#tester" do
-    specify { build.tester.should be_a Rmts::Tester }
+    specify { build.tester.should be_a Bait::Tester }
   end
 
   describe "#passed" do
@@ -57,9 +57,9 @@ describe Rmts::Build do
     end
 
     it "is removed from build ids" do
-      Rmts::Build.ids.should have(1).item
+      Bait::Build.ids.should have(1).item
       @build.destroy
-      Rmts::Build.ids.should be_empty
+      Bait::Build.ids.should be_empty
     end
   end
 end

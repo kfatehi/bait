@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rmts/version'
+require 'bait/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "rmts"
-  spec.version       = Rmts::VERSION
+  spec.name          = "bait"
+  spec.version       = Bait::VERSION
   spec.authors       = ["Keyvan Fatehi"]
   spec.email         = ["keyvan@digitalfilmtree.com"]
-  spec.description   = %q{static code analysis and ci server with obj-c support}
-  spec.summary       = %q{static code analysis and ci server with obj-c support}
-  spec.homepage      = ""
+  spec.description   = %q{build and integration test service}
+  spec.summary       = %q{build and integration test service}
+  spec.homepage      = "https://github.com/keyvanfatehi/bait"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

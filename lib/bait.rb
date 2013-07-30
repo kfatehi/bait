@@ -1,8 +1,8 @@
-require "rmts/version"
+require "bait/version"
 require 'moneta'
 require 'fileutils'
 
-module Rmts
+module Bait
   def self.storage_dir
     path = File.join("#{self.home}", "#{self.env}")
     FileUtils.mkdir_p path
@@ -10,7 +10,7 @@ module Rmts
   end
 
   def self.db_dir
-    db_dir = File.join Rmts.storage_dir, "databases"
+    db_dir = File.join self.storage_dir, "databases"
     FileUtils.mkdir_p db_dir
     db_dir
   end
@@ -32,7 +32,7 @@ module Rmts
   end
 
   def self.home
-    File.join Etc.getpwuid.dir, '.rmts'
+    File.join Etc.getpwuid.dir, '.bait'
   end
 end
 

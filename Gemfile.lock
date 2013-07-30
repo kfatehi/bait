@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rmts (0.1.0)
+    bait (0.1.1)
       git
       haml
       moneta
@@ -96,11 +96,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bait!
   bundler (~> 1.3)
   guard-rspec
   pry
   rack-test
   rake
-  rmts!
   rspec
   simplecov

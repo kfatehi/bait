@@ -1,14 +1,14 @@
-require 'rmts'
+require 'bait'
 require 'moneta'
 require "toystore"
-require 'rmts/simple_query'
-require 'rmts/tester'
+require 'bait/simple_query'
+require 'bait/tester'
 
-module Rmts
+module Bait
   class Build
-    extend Rmts::SimpleQuery
+    extend Bait::SimpleQuery
     include Toy::Store
-    @@db_file = Rmts.db_file('builds')
+    @@db_file = Bait.db_file('builds')
     adapter :memory, Moneta.new(:YAML, :file => @@db_file)
 
     attribute :ref, String
@@ -25,13 +25,13 @@ module Rmts
     validates_presence_of :clone_url
 
     def tester
-      @tester ||= Rmts::Tester.new(self)
+      @tester ||= Bait::Tester.new(self)
     end
 
     def test_later
       self.tested = false
       self.save
-      unless Rmts.env == "test"
+      unless Bait.env == "test"
         fork do
           self.tester.clone!
           self.tester.test!
@@ -41,7 +41,7 @@ module Rmts
     end
 
     # TODO
-    # Make the check_into_store part of Rmts::SimpleQuery
+    # Make the check_into_store part of Bait::SimpleQuery
     after_create :check_into_store
 
     before_destroy :checkout_from_store

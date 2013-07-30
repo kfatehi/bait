@@ -13,12 +13,12 @@ As a Ruby on Rails developer, this was invaluable... But the iOS developers we h
 
 Fast forward a year or so later and the app is complex, has no test suite, and our QA testers can barely keep up.
 
-Scribbeo-motion proved that this works, and so Rmts is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
+Scribbeo-motion proved that this works, and so bait is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
 
 # Architectural Overview
 
 ```
-                      Github POST rmts:80/
+                      Github POST bait:80/
 ______________________        \./
 |  Mac OS X 10.8     |         |
 |   w/ RubyMotion    |         |
@@ -52,15 +52,15 @@ ______________________        \./
 
 ## Github Webhook Support
 
-Rmts provides a Sinatra endpoint for the github push event webhook.
+bait provides a Sinatra endpoint for the github push event webhook.
 
-When the repo is cloned, an Rmts executes a file relative to your
-project. This file must exist in order to use Rmts: `.rmts/test.sh`
+When the repo is cloned, an bait executes a file relative to your
+project. This file must exist in order to use bait: `.bait/test.sh`
 
-## .rmts/test.sh
+## .bait/test.sh
 
 In this file you will run your test suite. **Be sure to make it
-executable `chmod a+x .rmts/test.sh`**
+executable `chmod a+x .bait/test.sh`**
 
 This file should output whatever you want to STDOUT/STDERR and return
 the correct exit value.
@@ -69,8 +69,8 @@ the correct exit value.
 
 ```bash
 #!/bin/bash
-rmts_dir=$(dirname $0)
-project_dir="$rmts_dir/.."
+bait_dir=$(dirname $0)
+project_dir="$bait_dir/.."
 cd $project_dir
 bundle
 bundle exec rspec spec
@@ -78,13 +78,13 @@ bundle exec rspec spec
 
 ## Objective-C ?
 
-So you can see how Rmts will run any test suite via arbitrary bash
+So you can see how bait will run any test suite via arbitrary bash
 scripts upon a Github hook.
 
 But how exactly will it help add a ruby test suite to an Obj-C app?
 
 Watch this spot for some examples soon; essentially we'll be doing this
-in Ruby using Rmts::Wrap::ObjC or some such :)
+in Ruby using bait::Wrap::ObjC or some such :)
 
 # Future
 
