@@ -5,6 +5,8 @@ require 'bait/build'
 
 module Bait
   class Api < Sinatra::Base
+    set :port, 8417
+
     get '/' do
       redirect '/build'
     end
