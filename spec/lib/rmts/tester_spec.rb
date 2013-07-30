@@ -49,6 +49,7 @@ describe Rmts::Tester do
 
     context "does not have a test script" do
       before do
+        FileUtils.rm tester.script
         tester.test!
       end
       it { should_not be_tested }
@@ -58,9 +59,6 @@ describe Rmts::Tester do
     end
 
     context "has a test script" do
-      before do
-        FileUtils.mkdir tester.rmts_dir
-      end
       context "successful" do
         before do
           write_script_with_status tester.script, 0
