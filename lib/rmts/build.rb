@@ -32,7 +32,10 @@ module Rmts
       self.tested = false
       self.save
       unless Rmts.env == "test"
-        fork { self.tester.test! }
+        fork do
+          self.tester.clone!
+          self.tester.test!
+        end
       end
       self
     end
