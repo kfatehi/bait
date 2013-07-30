@@ -1,4 +1,4 @@
-rmts
+Rmts
 ====
 
 RubyMotion Test Service (aka Radical Metrical Test Sorcery)
@@ -13,7 +13,7 @@ As a Ruby on Rails developer, this was invaluable... But the iOS developers we h
 
 Fast forward a year or so later and the app is complex, has no test suite, and our QA testers can barely keep up.
 
-Scribbeo-motion proved that this works, and so RMTS is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
+Scribbeo-motion proved that this works, and so Rmts is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
 
 # Architectural Overview
 
@@ -27,24 +27,24 @@ ______________________        \./
 |                          |Sinatra|            |
 |                          +---+---+            |
 |                              |                |
-|                    +---------+-------------+  |
-|                    |RMTS::Build.new(params)|  |
-|                    +------+-----+----------+  |
+|                       +---------+--+          |
+|                       |Rmts::Build |          |
+|                       +---+-----+--+          |
 |                           |     |             |
 |                           |     |             |
 |                          \|/   /|\            |
 |                           |     |             |
 |                           |     |             |
-|                          ++-----++            |
-|         RMTS::Tester.new(| build |)           |
-|                          +-------+            |
+|                        +------------+         |
+|   [.rmts/test.sh]------|Rmts::Tester|         |
+|                        +------------+         |
 |                                               |
 +-----------------------------------------------+
 
-   RMTS::Build -- Determine what kind of project it is.
+   Rmts::Build -- Determine what kind of project it is.
                   Do a pre-flight check, and enqueue in Redis.
 
-   RMTS::Tester -- Bootstrap and run test suite.
+   Rmts::Tester -- Bootstrap and run test suite.
                    Read exit value and update record in Redis.
 ```
 
@@ -54,10 +54,10 @@ ______________________        \./
 
 ## Github Webhook Support
 
-RMTS provides a Sinatra endpoint for the github push event webhook.
+Rmts provides a Sinatra endpoint for the github push event webhook.
 
-When the repo is cloned, an RMTS executes a file relative to your
-project. This file must exist in order to use RMTS: `.rmts/test.sh`
+When the repo is cloned, an Rmts executes a file relative to your
+project. This file must exist in order to use Rmts: `.rmts/test.sh`
 
 ## .rmts/test.sh
 
@@ -80,13 +80,13 @@ bundle exec rspec spec
 
 ## Objective-C ?
 
-So you can see how RMTS will run any test suite via arbitrary bash
+So you can see how Rmts will run any test suite via arbitrary bash
 scripts upon a Github hook.
 
 But how exactly will it help add a ruby test suite to an Obj-C app?
 
 Watch this spot for some examples soon; essentially we'll be doing this
-in Ruby using RMTS::Wrap::ObjC or some such :)
+in Ruby using Rmts::Wrap::ObjC or some such :)
 
 # Future
 
