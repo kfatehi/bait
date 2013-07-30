@@ -41,17 +41,20 @@ module Rmts
 
     def clone!
       unless cloned?
-        Git.clone(@build.clone_url, @build.name, :path => sandbox_directory)
+        begin
+          Git.clone(@build.clone_url, @build.name, :path => sandbox_directory)
+        rescue => ex
+          msg = "Failed to clone #{@build.clone_url}"
+          puts msg
+          @build.stderr = "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace}"
+          @build.save
+        end
         @cloned = Dir.exists? File.join(clone_path, ".git/")
       end
     end
 
     def cloned?
       @cloned
-    end
-
-    def sandbox_contents
-      Dir.glob(File.join(self.sandbox_directory, "*"))
     end
 
     def sandbox_directory

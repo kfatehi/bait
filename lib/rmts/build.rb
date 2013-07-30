@@ -21,6 +21,9 @@ module Rmts
     attribute :stderr, String
     attribute :tested, Boolean
 
+    validates_presence_of :name
+    validates_presence_of :clone_url
+
     def tester
       @tester ||= Rmts::Tester.new(self)
     end
@@ -28,7 +31,9 @@ module Rmts
     def test_later
       self.tested = false
       self.save
-      fork { self.tester.test! }
+      unless Rmts.env == "test"
+        fork { self.tester.test! }
+      end
       self
     end
 
@@ -36,12 +41,18 @@ module Rmts
     # Make the check_into_store part of Rmts::SimpleQuery
     after_create :check_into_store
 
+    before_destroy :checkout_from_store
+
     private
 
     def check_into_store
       build_ids = Build.ids
       build_ids << self.id
       Build.ids = build_ids
+    end
+
+    def checkout_from_store
+      Build.ids = Build.ids.reject{|id| id == self.id}
     end
   end
 end

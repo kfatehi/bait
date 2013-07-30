@@ -52,7 +52,7 @@ describe Rmts::Tester do
         tester.test!
       end
       it { should_not be_tested }
-      it "has RMTS errors in stderr" do
+      it "has Rmts errors in stderr" do
         subject.stderr.should match /script was expected but missing/
       end
     end

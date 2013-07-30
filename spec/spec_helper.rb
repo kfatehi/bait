@@ -1,10 +1,8 @@
 ENV['RACK_ENV'] = "test"
+require 'simplecov'
+SimpleCov.start
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'rmts'
-require 'rspec'
-require 'sinatra'
-require 'rack/test'
 require 'fileutils'
 
 def clear_storage
@@ -18,6 +16,7 @@ def clear_db
 end
 
 require 'support/script_maker'
+require 'rack/test'
 
 RSpec.configure do |config|
   config.before(:suite) { clear_storage }

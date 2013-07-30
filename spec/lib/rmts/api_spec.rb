@@ -45,8 +45,9 @@ describe "Sinatra App" do
       GITHUB_JSON
     end
 
+    let (:build) { Rmts::Build.last }
+
     describe "POST /" do
-      let (:build) { Rmts::Build.last }
       before do
         post '/', payload: github_json
       end
@@ -66,10 +67,15 @@ describe "Sinatra App" do
     end
 
     describe "GET /" do
+      before { get '/' }
+      it { should be_redirect }
+    end
+
+    describe "GET /build" do
       before do
-        Rmts::Build.create(name: "quickfox")
-        Rmts::Build.create(name: "slowsloth")
-        get '/'
+        Rmts::Build.create(name: "quickfox", clone_url:'...')
+        Rmts::Build.create(name: "slowsloth", clone_url:'...')
+        get '/build'
       end
 
       it { should be_ok }
@@ -77,6 +83,24 @@ describe "Sinatra App" do
       it "shows the builds" do
         subject.body.should match /quickfox/
         subject.body.should match /slowsloth/
+      end
+    end
+
+    describe "POST /build/create" do
+      let(:test_url){ "http://github.com/defunkt/github" }
+      it "can create a build manually" do
+        post '/build/create', {clone_url:test_url}
+        build.clone_url.should eq test_url
+      end
+    end
+
+    describe "GET /build/remove/#" do
+      before do
+        @build = Rmts::Build.create(name: "quickfox", clone_url:'...')
+      end
+      it "removes builds from the store" do
+        get "/build/remove/#{@build.id}"
+        expect{@build.reload}.to raise_error Toy::NotFound
       end
     end
   end
