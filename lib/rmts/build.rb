@@ -2,7 +2,7 @@ require 'rmts'
 require 'moneta'
 require "toystore"
 require 'rmts/simple_query'
-require 'rmts/build_tester'
+require 'rmts/tester'
 
 module Rmts
   class Build
@@ -19,7 +19,7 @@ module Rmts
     attribute :tested, Boolean
 
     def tester
-      @tester ||= Rmts::BuildTester.new(self)
+      @tester ||= Rmts::Tester.new(self)
     end
 
     def test_later

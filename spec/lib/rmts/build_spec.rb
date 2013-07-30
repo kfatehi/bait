@@ -39,16 +39,14 @@ describe Rmts::Build do
     end
   end
 
+  let (:build) { Rmts::Build.create(name: "app") }
+
   describe "#tester" do
-    it "returns an Rmts::BuildTester" do
-      build = Rmts::Build.create(name: "app")
-      build.tester.should be_a Rmts::BuildTester
-    end
+    specify { build.tester.should be_a Rmts::Tester }
   end
 
   describe "#passed" do
     it "starts as nil" do
-      build = Rmts::Build.create(name: "app")
       build.passed.should be_nil
     end
   end

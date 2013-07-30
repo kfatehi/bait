@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'rmts/build_tester'
+require 'rmts/tester'
 
-describe Rmts::BuildTester do
+describe Rmts::Tester do
   let(:repo_path) do
     path = File.join(File.dirname(__FILE__), '..', '..', '..')
     File.expand_path(path)

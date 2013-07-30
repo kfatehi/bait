@@ -5,7 +5,7 @@ require 'logger'
 require 'open3'
 
 module Rmts
-  class BuildTester
+  class Tester
     attr_reader :passed
 
     def initialize build
