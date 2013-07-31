@@ -105,6 +105,9 @@ bundle install > /dev/null 2>&1
 bundle exec motion-specwrap
 ```
 
+An example project that will work on bait can be [found
+here](https://github.com/keyvanfatehi/baitmotion)
+
 There is a bug in RubyMotion where the exit value isn't reported
 properly, that's why we are using
 [motion-specwrap](https://github.com/mdks/motion-specwrap) to run the
