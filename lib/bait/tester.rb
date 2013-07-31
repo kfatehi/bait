@@ -22,11 +22,24 @@ module Bait
 
     def test!
       begin
-        stdout, stderr, s = Open3.capture3(script)
-        @build.tested = true
-        @build.passed = s.exitstatus == 0
-        @build.stdout = stdout
-        @build.stderr = stderr
+        data = {out:'', err:''}
+        Open3.popen3(script) do |stdin, out, err, external|
+          # Create a thread to read from each stream
+          { :out => out, :err => err }.each do |key, stream|
+            Thread.new do
+              until (line = stream.gets).nil? do
+                data[key] << line
+              end
+            end
+          end
+
+          # Don't exit until the external process is done
+          external.join
+          @build.passed = external.value == 0
+          @build.tested = true
+          @build.stdout = data[:out]
+          @build.stderr = data[:err]
+        end
       rescue Errno::ENOENT => ex
         @build.stderr = "A test script was expected but missing.\nError: #{ex.message}"
       ensure
