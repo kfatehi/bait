@@ -51,7 +51,7 @@ describe Bait::Build do
     end
   end
 
-  describe "before_delete" do
+  describe "removal" do
     before do
       @build = build
     end

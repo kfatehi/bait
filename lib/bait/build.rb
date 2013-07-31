@@ -6,8 +6,9 @@ require 'bait/tester'
 
 module Bait
   class Build
-    extend Bait::SimpleQuery
     include Toy::Store
+    extend Bait::SimpleQuery
+
     @@db_file = Bait.db_file('builds')
     adapter :memory, Moneta.new(:YAML, :file => @@db_file)
 
@@ -40,22 +41,5 @@ module Bait
       self
     end
 
-    # TODO
-    # Make the check_into_store part of Bait::SimpleQuery
-    after_create :check_into_store
-
-    before_destroy :checkout_from_store
-
-    private
-
-    def check_into_store
-      build_ids = Build.ids
-      build_ids << self.id
-      Build.ids = build_ids
-    end
-
-    def checkout_from_store
-      Build.ids = Build.ids.reject{|id| id == self.id}
-    end
   end
 end

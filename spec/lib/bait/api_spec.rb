@@ -99,8 +99,10 @@ describe "Sinatra App" do
         @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       end
       it "removes builds from the store" do
+        Bait::Build.ids.should have(1).item
         get "/build/remove/#{@build.id}"
         expect{@build.reload}.to raise_error Toy::NotFound
+        Bait::Build.ids.should be_empty
       end
     end
   end
