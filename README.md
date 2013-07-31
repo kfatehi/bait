@@ -26,7 +26,7 @@ Scribbeo-motion proved that this works, and so bait is a service I'm envisioning
 # Architectural Overview
 
 ```
-                      Github POST bait:80/
+                    Github POST bait:8417/
 ______________________        \./
 |  Mac OS X 10.8     |         |
 |   w/ RubyMotion    |         |
@@ -120,8 +120,22 @@ scripts upon a Github hook.
 
 But how exactly will it help add a ruby test suite to an Obj-C app?
 
-Watch this spot for some examples soon; essentially we'll be doing this
-in Ruby using bait::Wrap::ObjC or some such :)
+Watch this spot for some examples soon
+
+The basic idea however is to bootstrap a rubymotion project in your
+`test.sh` file, throw your Obj-C files into vendor/ and then setup your
+Rakefile like so:
+
+```ruby
+Motion::Project::App.setup do |app|
+  app.name = 'My Wrapped Project'
+
+  %w[Tools Models Controllers Views].map{|i| app.vendor_project "vendor/SB/#{i}", :static }
+end
+```
+
+Now that's just a preliminary example; I will try to make this very easy
+and conventional and then report my findings here.
 
 # Future
 
