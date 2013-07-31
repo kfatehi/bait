@@ -8,7 +8,12 @@ module Bait
     end
 
     def glob pattern
-      Dir.glob @path.join("**/#{pattern}")
+      cache ||= {}
+      if value = cache[pattern]
+        value
+      else
+        cache[pattern] = Dir.glob @path.join("**/#{pattern}")
+      end
     end
 
     def ordered_dependencies file_pattern, klass
