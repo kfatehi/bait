@@ -97,12 +97,14 @@ describe "Sinatra App" do
     describe "GET /build/remove/#" do
       before do
         @build = Bait::Build.create(name: "quickfox", clone_url:'...')
+        @sandbox = @build.tester.sandbox_directory
       end
-      it "removes builds from the store" do
+      it "removes the build from store and its files from the filesystem" do
         Bait::Build.ids.should have(1).item
         get "/build/remove/#{@build.id}"
         expect{@build.reload}.to raise_error Toy::NotFound
         Bait::Build.ids.should be_empty
+        Pathname.new(@sandbox).should_not exist
       end
     end
   end

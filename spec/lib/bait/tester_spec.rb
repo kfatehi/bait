@@ -77,4 +77,15 @@ describe Bait::Tester do
       end
     end
   end
+
+  describe "cleanup!" do
+    before do
+      tester.clone!
+    end
+    it "removes the entire sandbox" do
+      Dir.exists?(tester.sandbox_directory).should be_true
+      tester.cleanup!
+      Dir.exists?(tester.sandbox_directory).should be_false
+    end
+  end
 end

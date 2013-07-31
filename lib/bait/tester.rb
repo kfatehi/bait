@@ -57,6 +57,10 @@ module Bait
       @cloned
     end
 
+    def cleanup!
+      FileUtils.rm_rf sandbox_directory
+    end
+
     def sandbox_directory
       @sandbox_directory ||= begin
         dir = File.join Bait.storage_dir, "build_tester", @build.id
