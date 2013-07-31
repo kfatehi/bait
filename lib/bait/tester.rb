@@ -10,7 +10,6 @@ module Bait
 
     def initialize build
       @build = build
-      @cloned = false
     end
 
     def bait_dir
@@ -49,12 +48,11 @@ module Bait
           @build.stderr = "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace}"
           @build.save
         end
-        @cloned = Dir.exists? File.join(clone_path, ".git/")
       end
     end
 
     def cloned?
-      @cloned
+      Dir.exists? File.join(clone_path, ".git/")
     end
 
     def cleanup!
