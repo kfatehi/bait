@@ -65,8 +65,11 @@ executable `chmod a+x .bait/test.sh`**
 This file should output whatever you want to STDOUT/STDERR and return
 the correct exit value.
 
-### Example
+### Examples
 
+#### Ruby Example
+
+##### [project root]/.bait/test.sh
 ```bash
 #!/bin/bash
 bait_dir=$(dirname $0)
@@ -75,6 +78,23 @@ cd $project_dir
 bundle
 bundle exec rspec spec
 ```
+
+#### RubyMotion Example
+
+##### [project root]/.bait/test.sh
+```bash
+#!/bin/bash
+bait_dir=$(dirname $0)
+project_dir="$bait_dir/.."
+cd $project_dir
+
+if [[ -d ./Gemfile ]]; then
+  bundle
+fi
+
+rake spec
+```
+
 
 ## Objective-C ?
 
