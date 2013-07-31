@@ -12,12 +12,9 @@ Listing Builds
           = build.passed? ? "Passed!" : "Failed!"
         - else
           Queued
-      .stdout
+      .output
         Output:
-        %pre= build.stdout
-      .stderr
-        Errors:
-        %pre= build.stderr
+        %pre= build.output
       .actions
         %a{href:"/build/remove/#{build.id}"} Remove
 

@@ -1,8 +1,7 @@
 require 'bait'
 require 'bait/build'
 require 'git'
-require 'logger'
-require 'open3'
+require 'pty'
 
 module Bait
   class Tester
@@ -22,26 +21,18 @@ module Bait
 
     def test!
       begin
-        data = {out:'', err:''}
-        Open3.popen3(script) do |stdin, out, err, external|
-          # Create a thread to read from each stream
-          { :out => out, :err => err }.each do |key, stream|
-            Thread.new do
-              until (line = stream.gets).nil? do
-                data[key] << line
-              end
-            end
+        begin
+          PTY.spawn(script) do |r, w, pid|
+            r.each { |line| @build.output << line }
+            @build.passed = PTY.check(pid).exitstatus == 0
           end
-
-          # Don't exit until the external process is done
-          external.join
-          @build.passed = external.value == 0
-          @build.tested = true
-          @build.stdout = data[:out]
-          @build.stderr = data[:err]
+        rescue PTY::ChildExited => e
+          @build.output << e
+          @build.passed = false
         end
+        @build.tested = true
       rescue Errno::ENOENT => ex
-        @build.stderr = "A test script was expected but missing.\nError: #{ex.message}"
+        @build.output << "A test script was expected but missing.\nError: #{ex.message}"
       ensure
         @build.save
       end

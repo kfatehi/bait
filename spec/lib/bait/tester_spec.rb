@@ -30,11 +30,8 @@ describe Bait::Tester do
 
   describe "#test!" do
     shared_examples_for "a test run" do
-      it "saves stdout into the build" do
-        build.stdout.should eq "this is a test script\n"
-      end
-      it "saves stderr into the build" do
-        build.stderr.should be_empty
+      it "saves output into the build" do
+        build.output.should match "this is a test script"
       end
       it "is marked as tested" do
         build.should be_tested
@@ -53,8 +50,8 @@ describe Bait::Tester do
         tester.test!
       end
       it { should_not be_tested }
-      it "has Bait errors in stderr" do
-        subject.stderr.should match /script was expected but missing/
+      it "has Bait errors in output" do
+        subject.output.should match /script was expected but missing/
       end
     end
 

@@ -18,9 +18,8 @@ module Bait
     attribute :name, String
     attribute :clone_url, String
     attribute :passed, Boolean
-    attribute :stdout, String
-    attribute :stderr, String
-    attribute :tested, Boolean
+    attribute :output, String, default: ""
+    attribute :tested, Boolean, default: false
 
     validates_presence_of :name
     validates_presence_of :clone_url

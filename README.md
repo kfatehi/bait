@@ -76,14 +76,9 @@ bait_dir=$(dirname $0)
 project_dir="$bait_dir/.."
 cd $project_dir
 
-
-if [[ -f ./Gemfile ]]; then
-  echo "Gemfile exists -- using bunder"
-  bundle
-  bundle exec rspec spec
-else
-  rspec spec
-fi
+echo "bundling"
+bundle install > /dev/null 2>&1
+bundle exec rspec spec
 ```
 
 #### RubyMotion Example
@@ -95,14 +90,17 @@ bait_dir=$(dirname $0)
 project_dir="$bait_dir/.."
 cd $project_dir
 
-if [[ -f ./Gemfile ]]; then
-  echo "Gemfile exists -- bundling"
-  bundle
-fi
+export BUNDLE_GEMFILE=$project_dir/Gemfile
 
-rake spec
+echo "bundling"
+bundle install > /dev/null 2>&1
+bundle exec motion-specwrap
 ```
 
+There is a bug in RubyMotion where the exit value isn't reported
+properly, that's why we are using
+[motion-specwrap](https://github.com/mdks/motion-specwrap) to run the
+tests and report the correct exit value
 
 ## Objective-C ?
 
