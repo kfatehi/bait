@@ -3,6 +3,14 @@ Bait
 
 `bait` is a build and integration tester
 
+# Usage
+
+Install the gem and then just run `bait`
+
+A sinatra server will start up. YAML files will be stored in ~/.bait
+
+Hit up 0.0.0.0:8417 to see what's up. You can set your Github to notify it and it will run your tests per the bait spec.
+
 # Backstory
 
 https://github.com/DFTi/Scribbeo-motion already is designed in such a way that it vendors our existing iOS (completely written in Objective-C) application https://github.com/DFTi/Critique
