@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
 ENV['RACK_ENV'] = 'production'
-require File.expand_path("../../config/boot.rb", __FILE__)
 Bait::Api.run!
 
