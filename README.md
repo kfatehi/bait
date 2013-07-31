@@ -67,7 +67,7 @@ the correct exit value.
 
 ### Examples
 
-#### Ruby Example
+#### Ruby / Rails Example (RSpec)
 
 ##### [project root]/.bait/test.sh
 ```bash
@@ -75,8 +75,15 @@ the correct exit value.
 bait_dir=$(dirname $0)
 project_dir="$bait_dir/.."
 cd $project_dir
-bundle
-bundle exec rspec spec
+
+
+if [[ -f ./Gemfile ]]; then
+  echo "Gemfile exists -- using bunder"
+  bundle
+  bundle exec rspec spec
+else
+  rspec spec
+fi
 ```
 
 #### RubyMotion Example
@@ -88,7 +95,8 @@ bait_dir=$(dirname $0)
 project_dir="$bait_dir/.."
 cd $project_dir
 
-if [[ -d ./Gemfile ]]; then
+if [[ -f ./Gemfile ]]; then
+  echo "Gemfile exists -- bundling"
   bundle
 fi
 
