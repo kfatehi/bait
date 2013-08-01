@@ -107,5 +107,17 @@ describe "Sinatra App" do
         Pathname.new(@sandbox).should_not exist
       end
     end
+
+    describe "GET /build/retest/#" do
+      before do
+        @build = Bait::Build.create(name: "quickfox", clone_url:'...')
+        @build.tested = true
+        @build.save
+      end
+      it "marks the build as untested" do
+        get "/build/retest/#{@build.id}"
+        build.tested.should be_false
+      end
+    end
   end
 end
