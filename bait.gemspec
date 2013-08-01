@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Bait::VERSION
   spec.authors       = ["Keyvan Fatehi"]
   spec.email         = ["keyvan@digitalfilmtree.com"]
-  spec.description   = %q{build and integration test service}
+  spec.description   = %q{Accepts github push event webhook to clone and execute .bait/test.sh}
   spec.summary       = %q{build and integration test service}
   spec.homepage      = "https://github.com/keyvanfatehi/bait"
   spec.license       = "MIT"

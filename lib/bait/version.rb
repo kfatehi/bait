@@ -1,3 +1,3 @@
 module Bait
-  VERSION = "0.3.0"
+  VERSION = File.open(File.join(File.dirname(__FILE__), "..", "..", "VERSION")){|f| f.read.strip}
 end
