@@ -51,10 +51,16 @@ ______________________        \./
 
    Bait::Build -- Persistent ToyStore
 
-   Bait::Tester -- Runs your tests and updates build accordingly
+   Bait::Tester -- Runs your tests and persists results in Bait::Build
 ```
 
 *Created with [JavE](http://www.jave.de/)*
+
+# Datastore
+
+You can use any datastore you want that is supported in [Moneta](https://github.com/minad/moneta)
+
+By default, bait will store its data under `~/.bait` as YAML files
 
 # Functional Overview
 
@@ -70,12 +76,12 @@ project. This file must exist in order to use bait: `.bait/test.sh`
 In this file you will run your test suite. **Be sure to make it
 executable `chmod a+x .bait/test.sh`**
 
-This file should output whatever you want to STDOUT/STDERR and return
-the correct exit value.
+This file should output whatever you want to STDOUT and/or STDERR and
+return 0 for passing and non-zero for failure.
 
 ### Examples
 
-#### Ruby / Rails Example (RSpec)
+#### Ruby Projects
 
 ##### [project root]/.bait/test.sh
 ```bash
@@ -89,7 +95,7 @@ bundle install > /dev/null 2>&1
 bundle exec rspec spec
 ```
 
-#### RubyMotion Example
+#### RubyMotion Projects
 
 ##### [project root]/.bait/test.sh
 ```bash
@@ -113,34 +119,33 @@ properly, that's why we are using
 [motion-specwrap](https://github.com/mdks/motion-specwrap) to run the
 tests and report the correct exit value
 
-## Objective-C ?
+#### Objective-C Projects
 
-So you can see how bait will run any test suite via arbitrary bash
-scripts upon a Github hook.
+Objective-C projects are supported if you're using [Calabash](http://calaba.sh)
 
-But how exactly will it help add a ruby test suite to an Obj-C app?
+##### [project root]/.bait/test.sh
+```
+#!/bin/bash
+bait_dir=$(dirname $0)
+project_dir="$bait_dir/.."
+cd $project_dir
 
-Watch this spot for some examples soon
+export BUNDLE_GEMFILE=$project_dir/Gemfile
 
-The basic idea however is to bootstrap a rubymotion project in your
-`test.sh` file, throw your Obj-C files into vendor/ and then setup your
-Rakefile like so:
-
-```ruby
-Motion::Project::App.setup do |app|
-  app.name = 'My Wrapped Project'
-
-  %w[Tools Models Controllers Views].map{|i| app.vendor_project "vendor/SB/#{i}", :static }
-end
+echo "bundling"
+bundle install > /dev/null 2>&1
+bundle exec cucumber
 ```
 
-Now that's just a preliminary example; I will try to make this very easy
-and conventional and then report my findings here.
+#### Other Projects
 
-# Future
+Create a file `.bait/test.sh` and `exit 0` if it passes or non-zero if
+it does not pass. Output whatever you want to STDOUT or STDERR.
+
+Feel free to send pull requests with examples if you end up using bait.
+
+# Future Goals
 
 ## Static Code Analysis
 
-Integrate [metric-fu](http://metric-fu.rubyforge.org/) for ruby apps and [OCLint](http://oclint.org/) for objective-c apps. Report these in Redis.
-
-
+Integrate [metric-fu](http://metric-fu.rubyforge.org/) for ruby apps and [OCLint](http://oclint.org/) for objective-c apps, JSLint and JSure for javascript.

@@ -40,11 +40,11 @@ module Bait
       self
     end
 
-    after_destroy :remove_sandbox
-
-    def remove_sandbox
-      tester.cleanup!
+    def queued?
+      !self.reload.tested?
     end
+
+    after_destroy  { tester.cleanup! }
 
   end
 end

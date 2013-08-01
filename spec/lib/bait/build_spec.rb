@@ -62,4 +62,17 @@ describe Bait::Build do
       Bait::Build.ids.should be_empty
     end
   end
+
+  describe "#queued" do
+    subject { build }
+    context "already tested" do
+      before { build.tested = true ; build.save }
+      it { should_not be_queued }
+    end
+
+    context "not tested" do
+      before { build.tested = false ; build.save }
+      it { should be_queued }
+    end
+  end
 end

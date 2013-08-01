@@ -45,6 +45,7 @@ module Bait
       build.tested = false
       build.test_later
       build.save
+      redirect '/build'
     end
   end
 end

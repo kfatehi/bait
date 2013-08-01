@@ -61,9 +61,7 @@ describe "Sinatra App" do
         build.ref.should eq "refs/heads/master"
       end
 
-      it "will be tested later based on a flag" do
-        build.should_not be_tested
-      end
+      it { build.should be_queued }
     end
 
     describe "GET /" do
@@ -88,24 +86,27 @@ describe "Sinatra App" do
 
     describe "POST /build/create" do
       let(:test_url){ "http://github.com/defunkt/github" }
-      it "can create a build manually" do
+      before do
         post '/build/create', {clone_url:test_url}
+      end
+      it "can create a build manually" do
         build.clone_url.should eq test_url
       end
+      specify { build.should be_queued }
     end
 
     describe "GET /build/remove/#" do
       before do
         @build = Bait::Build.create(name: "quickfox", clone_url:'...')
         @sandbox = @build.tester.sandbox_directory
+        get "/build/remove/#{@build.id}"
       end
       it "removes the build from store and its files from the filesystem" do
-        Bait::Build.ids.should have(1).item
-        get "/build/remove/#{@build.id}"
         expect{@build.reload}.to raise_error Toy::NotFound
         Bait::Build.ids.should be_empty
         Pathname.new(@sandbox).should_not exist
       end
+      it { should be_redirect }
     end
 
     describe "GET /build/retest/#" do
@@ -113,11 +114,12 @@ describe "Sinatra App" do
         @build = Bait::Build.create(name: "quickfox", clone_url:'...')
         @build.tested = true
         @build.save
-      end
-      it "marks the build as untested" do
         get "/build/retest/#{@build.id}"
-        build.tested.should be_false
       end
+      it "queues the build for retesting" do
+        build.should be_queued
+      end
+      it { should be_redirect }
     end
   end
 end
