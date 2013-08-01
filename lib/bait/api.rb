@@ -39,5 +39,12 @@ module Bait
       Build.destroy params["id"]
       redirect '/build'
     end
+
+    get '/build/retest/:id' do
+      build = Build.find params['id']
+      build.tested = false
+      build.test_later
+      build.save
+    end
   end
 end
