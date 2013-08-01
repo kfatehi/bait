@@ -9,19 +9,13 @@ Install the gem and then just run `bait`
 
 A sinatra server will start up. YAML files will be stored in ~/.bait
 
-Hit up 0.0.0.0:8417 to see what's up. You can set your Github to notify it and it will run your tests per the bait spec.
+Go to 0.0.0.0:8417
 
-# Backstory
+You can set your Github to notify the server on that port.
 
-https://github.com/DFTi/Scribbeo-motion already is designed in such a way that it vendors our existing iOS (completely written in Objective-C) application https://github.com/DFTi/Critique
+When github notifies bait, bait will clone the project and execute ~/.bait/test.sh and record exit value and output
 
-This gave us a Ruby(Motion) environment where UIAutomator is available using MacBacon (like rspec)
-
-As a Ruby on Rails developer, this was invaluable... But the iOS developers we hired disliked it and did not maintain the RubyMotion stuff.
-
-Fast forward a year or so later and the app is complex, has no test suite, and our QA testers can barely keep up.
-
-Scribbeo-motion proved that this works, and so bait is a service I'm envisioning for as the first stop between Github and the rest of my continuous integration pipeline.
+You may also test manually by inputting a clone URL within the UI
 
 # Architectural Overview
 
@@ -42,10 +36,10 @@ ______________________        \./
 |                          \|/   /|\            |
 |                          \[build]\            |
 |                          \|/   /|\            |
-|                          \|/   /|\            |
-|                        +------------+         |
+|    _____________         \|/   /|\            |
+|   [ your project]      +------------+         |
 |   [.bait/test.sh]------|Bait::Tester|         |
-|                        +------------+         |
+|   [status/output]      +------------+         |
 |                                               |
 +-----------------------------------------------+
 
@@ -60,7 +54,7 @@ ______________________        \./
 
 You can use any datastore you want that is supported in [Moneta](https://github.com/minad/moneta)
 
-By default, bait will store its data under `~/.bait` as YAML files
+By default, bait will store the data as YAML files in `~/bait`
 
 # Functional Overview
 
