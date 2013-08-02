@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'bait/api'
-require 'bait/build'
 
-describe "Sinatra App" do
+describe Bait::Api do
   let(:app) { Bait::Api }
   subject { last_response }
 

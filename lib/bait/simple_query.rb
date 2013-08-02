@@ -10,12 +10,17 @@ module Bait
         self.class.ids = self.class.ids.reject{|id| id == self.id}
       end
     end
+
+    def id_list_key
+      "#{self.name.split('::').last.downcase}_ids"
+    end
+
     def ids
-      Bait.store.raw["build_ids"] ||= []
+      Bait.store.raw[id_list_key] ||= []
     end
 
     def ids=(new_ids)
-      Bait.store.raw["build_ids"] = new_ids
+      Bait.store.raw[id_list_key] = new_ids
     end
 
     def all

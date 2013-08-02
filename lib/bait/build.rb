@@ -1,13 +1,7 @@
-require 'bait'
-require 'moneta'
-require "toystore"
-require 'bait/simple_query'
-require 'bait/tester'
+require 'bait/object'
 
 module Bait
-  class Build
-    include Toy::Store
-
+  class Build < Bait::Object
     adapter :memory,
       Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
@@ -42,7 +36,5 @@ module Bait
     end
 
     after_destroy  { tester.cleanup! }
-
-    extend Bait::SimpleQuery
   end
 end
