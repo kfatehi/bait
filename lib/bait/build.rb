@@ -1,4 +1,5 @@
 require 'bait/object'
+require 'bait/tester'
 
 module Bait
   class Build < Bait::Object

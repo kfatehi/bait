@@ -1,3 +1,4 @@
+require 'bait'
 require 'moneta'
 require "toystore"
 require 'bait/simple_query'
