@@ -21,8 +21,11 @@ module Bait
 
     def test!
       Open3.popen2e(script) do |stdin, oe, wait_thr|
+        @build.running = true
+        @build.save
         oe.each {|line| @build.output << line }
         @build.passed = wait_thr.value.exitstatus == 0
+        @build.running = false
       end
       @build.tested = true
     rescue Errno::ENOENT => ex

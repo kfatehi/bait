@@ -4,6 +4,7 @@ PATH
     bait (0.4.1)
       git
       haml
+      httparty
       moneta
       sinatra
       sinatra-contrib
@@ -40,6 +41,9 @@ GEM
       rspec (~> 2.13)
     haml (4.0.3)
       tilt
+    httparty (0.11.0)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
     i18n (0.6.4)
     listen (1.2.2)
       rb-fsevent (>= 0.9.3)
@@ -49,6 +53,7 @@ GEM
     method_source (0.8.1)
     moneta (0.7.19)
     multi_json (1.7.7)
+    multi_xml (0.5.4)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
