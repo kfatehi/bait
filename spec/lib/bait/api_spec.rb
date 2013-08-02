@@ -115,12 +115,13 @@ describe Bait::Api do
       @build.output = "bla bla old output"
       @build.save
       get "/build/retest/#{@build.id}"
+      @build.reload
     end
     it "queues the build for retesting" do
-      build.should be_queued
+      @build.should be_queued
     end
     it "clears the previous output" do
-      build.output.should be_blank
+      @build.output.should be_blank
     end
     it { should be_redirect }
   end
