@@ -94,11 +94,11 @@ describe Bait::Api do
     specify { build.should be_queued }
   end
 
-  describe "GET /build/remove/#" do
+  describe "GET /build/:id/remove" do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       @sandbox = @build.tester.sandbox_directory
-      get "/build/remove/#{@build.id}"
+      get "/build/#{@build.id}/remove"
     end
     it "removes the build from store and its files from the filesystem" do
       expect{@build.reload}.to raise_error Toy::NotFound
@@ -108,13 +108,13 @@ describe Bait::Api do
     it { should be_redirect }
   end
 
-  describe "GET /build/retest/#" do
+  describe "GET /build/:id/retest" do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       @build.tested = true
       @build.output = "bla bla old output"
       @build.save
-      get "/build/retest/#{@build.id}"
+      get "/build/#{@build.id}/retest"
       @build.reload
     end
     it "queues the build for retesting" do

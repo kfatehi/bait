@@ -38,12 +38,12 @@ module Bait
       redirect '/build'
     end
 
-    get '/build/remove/:id' do
+    get '/build/:id/remove' do
       Build.destroy params["id"]
       redirect '/build'
     end
 
-    get '/build/retest/:id' do
+    get '/build/:id/retest' do
       build = Build.find params['id']
       build.tested = false
       build.output = ""

@@ -14,8 +14,8 @@ Listing Builds
           Queued
       %pre.output= build.html_output
       .actions
-        %a{href:"/build/remove/#{build.id}"} Remove
-        %a{href:"/build/retest/#{build.id}"} Retest
+        %a{href:"/build/#{build.id}/remove"} Remove
+        %a{href:"/build/#{build.id}/retest"} Retest
 
 %hr
 
