@@ -46,7 +46,6 @@ describe Bait::Api do
       GITHUB_JSON
     end
 
-
     describe "POST /" do
       before do
         post '/', payload: github_json
