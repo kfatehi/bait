@@ -118,7 +118,7 @@ tests and report the correct exit value
 Objective-C projects are supported if you're using [Calabash](http://calaba.sh)
 
 ##### [project root]/.bait/test.sh
-```
+```bash
 #!/bin/bash
 bait_dir=$(dirname $0)
 project_dir="$bait_dir/.."
