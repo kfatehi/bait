@@ -1,21 +1,17 @@
 Listing Builds
 %ul
   - @builds.each do |build|
-    %li.build
-      %hr
-      .name= build.name
-      %a.clone_url{href:build.clone_url}= build.clone_url
-      .ref= build.ref
-      .status
-        Status:
-        - if build.tested?
-          = build.passed? ? "Passed!" : "Failed!"
-        - else
-          Queued
-      %pre.output= build.html_output
+    %li.build{id:build.id}
+      .header{class:build.status}
+        .status_icon= build.status
+        %a{href:build.clone_url}= build.name
+        .ref build.ref
+      .output
+        %pre= build.output
       .actions
-        %a{href:"/build/remove/#{build.id}"} Remove
-        %a{href:"/build/retest/#{build.id}"} Retest
+        %a{href:"/build/#{build.id}/remove"} Remove
+        |
+        %a{href:"/build/#{build.id}/retest"} Retest
 
 %hr
 

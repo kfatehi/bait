@@ -1,6 +1,5 @@
 require 'bait/object'
 require 'bait/tester'
-require 'ansi2html/main'
 
 module Bait
   class Build < Bait::Object
@@ -37,10 +36,12 @@ module Bait
       !self.reload.tested?
     end
 
-    def html_output
-      out = StringIO.new
-      ::ANSI2HTML::Main.new(self.output, out)
-      return out.string
+    def status
+      if queued?
+        "queued"
+      elsif tested?
+        passed? ? "passed" : "failed"
+      end
     end
 
     after_destroy  { tester.cleanup! }
