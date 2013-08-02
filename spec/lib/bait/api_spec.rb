@@ -69,8 +69,8 @@ describe Bait::Api do
     it { should be_redirect }
   end
 
-  describe "GET /build" do
-    before do
+  describe "GET /build"  do
+    before do 
       Bait::Build.create(name: "quickfox", clone_url:'...')
       Bait::Build.create(name: "slowsloth", clone_url:'...')
       get '/build'
@@ -115,14 +115,22 @@ describe Bait::Api do
       @build.output = "bla bla old output"
       @build.save
       get "/build/#{@build.id}/retest"
-      @build.reload
     end
     it "queues the build for retesting" do
-      @build.should be_queued
+      @build.reload.should be_queued
     end
     it "clears the previous output" do
-      @build.output.should be_blank
+      @build.reload.output.should be_blank
     end
     it { should be_redirect }
+  end
+
+  describe "GET /build/:id/events" do
+    let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
+    let (:connect!) { get "/build/#{build.id}/events" }
+    it "provides an event stream connection" do
+      connect!
+      last_response.content_type.should match /text\/event-stream/
+    end
   end
 end

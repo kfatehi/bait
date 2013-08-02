@@ -29,6 +29,7 @@ body {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 5px;
+  position:relative;
 }
 
 .build .header.passed {
@@ -40,8 +41,9 @@ body {
 }
 
 .build .header .status_icon {
-  float:right;
-  padding:8px;
+  top:4px;
+  right:4px;
+  position:absolute;
 }
 
 .build {
