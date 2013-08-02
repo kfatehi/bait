@@ -86,4 +86,9 @@ describe Bait::Build do
       it { should be_queued }
     end
   end
+
+  describe "#html_output" do
+    before { build.output = "\e[33mHello\e[0m" ; build.save }
+    specify { build.html_output.should eq %{<span class="yellow">Hello</span>} }
+  end
 end

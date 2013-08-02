@@ -47,8 +47,8 @@ module Bait
       build = Build.find params['id']
       build.tested = false
       build.output = ""
-      build.test_later
       build.save
+      build.test_later
       redirect '/build'
     end
   end

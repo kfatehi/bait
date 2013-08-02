@@ -1,7 +1,7 @@
 Listing Builds
 %ul
   - @builds.each do |build|
-    %li
+    %li.build
       %hr
       .name= build.name
       %a.clone_url{href:build.clone_url}= build.clone_url
@@ -12,9 +12,7 @@ Listing Builds
           = build.passed? ? "Passed!" : "Failed!"
         - else
           Queued
-      .output
-        Output:
-        %pre= build.output
+      %pre.output= build.html_output
       .actions
         %a{href:"/build/remove/#{build.id}"} Remove
         %a{href:"/build/retest/#{build.id}"} Retest
