@@ -112,11 +112,15 @@ describe Bait::Api do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       @build.tested = true
+      @build.output = "bla bla old output"
       @build.save
       get "/build/retest/#{@build.id}"
     end
     it "queues the build for retesting" do
       build.should be_queued
+    end
+    it "clears the previous output" do
+      build.output.should be_blank
     end
     it { should be_redirect }
   end

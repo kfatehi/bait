@@ -46,6 +46,7 @@ module Bait
     get '/build/retest/:id' do
       build = Build.find params['id']
       build.tested = false
+      build.output = ""
       build.test_later
       build.save
       redirect '/build'
