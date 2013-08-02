@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 ENV['RACK_ENV'] = 'production'
 require 'rubygems'
-require 'bait'
-require 'bait/api'
-Bait::Api.run!
-
+require 'bait/cli'
+Bait::CLI.send(ARGV[0] || :server)

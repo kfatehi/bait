@@ -2,10 +2,6 @@ require 'spec_helper'
 require 'bait/tester'
 
 describe Bait::Tester do
-  let(:repo_path) do
-    path = File.join(File.dirname(__FILE__), '..', '..', '..')
-    File.expand_path(path)
-  end
   let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
   let(:tester) { build.tester }
 
@@ -24,8 +20,17 @@ describe Bait::Tester do
   end
 
   describe "#clone!" do
-    before { tester.clone! }
-    specify { tester.should be_cloned }
+    context 'valid clone url' do
+      before { tester.clone! }
+      specify { build.output.should_not match /Failed to clone/ }
+      specify { tester.should be_cloned }
+    end
+    context "invalid clone url" do
+      let(:build) { Bait::Build.create(name: "bait", clone_url:'invalid') }
+      before { tester.clone! }
+      specify { build.output.should match /Failed to clone/ }
+      specify { tester.should_not be_cloned }
+    end
   end
 
   describe "#test!" do

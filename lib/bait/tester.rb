@@ -48,8 +48,7 @@ module Bait
           Git.clone(@build.clone_url, @build.name, :path => sandbox_directory)
         rescue => ex
           msg = "Failed to clone #{@build.clone_url}"
-          puts msg
-          @build.stderr = "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace}"
+          @build.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace}"
           @build.save
         end
       end

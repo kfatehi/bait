@@ -6,13 +6,15 @@ describe "Sinatra App" do
   let(:app) { Bait::Api }
   subject { last_response }
 
+  let (:build) { Bait::Build.last }
+
   describe "github post-receive hook" do
     let(:github_json) do
       <<-GITHUB_JSON
         { 
           "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
           "repository": {
-            "url": "http://github.com/defunkt/github",
+            "url": "http://github.com/keyvanfatehi/bait",
             "name": "github",
             "owner": {
               "email": "chris@ozmm.org",
@@ -45,7 +47,6 @@ describe "Sinatra App" do
       GITHUB_JSON
     end
 
-    let (:build) { Bait::Build.last }
 
     describe "POST /" do
       before do
@@ -61,65 +62,64 @@ describe "Sinatra App" do
         build.ref.should eq "refs/heads/master"
       end
 
-      it { build.should be_queued }
-    end
-
-    describe "GET /" do
-      before { get '/' }
-      it { should be_redirect }
-    end
-
-    describe "GET /build" do
-      before do
-        Bait::Build.create(name: "quickfox", clone_url:'...')
-        Bait::Build.create(name: "slowsloth", clone_url:'...')
-        get '/build'
-      end
-
-      it { should be_ok }
-
-      it "shows the builds" do
-        subject.body.should match /quickfox/
-        subject.body.should match /slowsloth/
-      end
-    end
-
-    describe "POST /build/create" do
-      let(:test_url){ "http://github.com/defunkt/github" }
-      before do
-        post '/build/create', {clone_url:test_url}
-      end
-      it "can create a build manually" do
-        build.clone_url.should eq test_url
-      end
       specify { build.should be_queued }
     end
+  end
 
-    describe "GET /build/remove/#" do
-      before do
-        @build = Bait::Build.create(name: "quickfox", clone_url:'...')
-        @sandbox = @build.tester.sandbox_directory
-        get "/build/remove/#{@build.id}"
-      end
-      it "removes the build from store and its files from the filesystem" do
-        expect{@build.reload}.to raise_error Toy::NotFound
-        Bait::Build.ids.should be_empty
-        Pathname.new(@sandbox).should_not exist
-      end
-      it { should be_redirect }
+  describe "GET /" do
+    before { get '/' }
+    it { should be_redirect }
+  end
+
+  describe "GET /build" do
+    before do
+      Bait::Build.create(name: "quickfox", clone_url:'...')
+      Bait::Build.create(name: "slowsloth", clone_url:'...')
+      get '/build'
     end
 
-    describe "GET /build/retest/#" do
-      before do
-        @build = Bait::Build.create(name: "quickfox", clone_url:'...')
-        @build.tested = true
-        @build.save
-        get "/build/retest/#{@build.id}"
-      end
-      it "queues the build for retesting" do
-        build.should be_queued
-      end
-      it { should be_redirect }
+    it { should be_ok }
+
+    it "shows the builds" do
+      subject.body.should match /quickfox/
+      subject.body.should match /slowsloth/
     end
+  end
+
+  describe "POST /build/create" do
+    let(:test_url){ repo_path }
+    before do
+      post '/build/create', {clone_url:test_url}
+    end
+    specify { build.clone_url.should eq test_url }
+    specify { build.name.should eq 'bait' }
+    specify { build.should be_queued }
+  end
+
+  describe "GET /build/remove/#" do
+    before do
+      @build = Bait::Build.create(name: "quickfox", clone_url:'...')
+      @sandbox = @build.tester.sandbox_directory
+      get "/build/remove/#{@build.id}"
+    end
+    it "removes the build from store and its files from the filesystem" do
+      expect{@build.reload}.to raise_error Toy::NotFound
+      Bait::Build.ids.should be_empty
+      Pathname.new(@sandbox).should_not exist
+    end
+    it { should be_redirect }
+  end
+
+  describe "GET /build/retest/#" do
+    before do
+      @build = Bait::Build.create(name: "quickfox", clone_url:'...')
+      @build.tested = true
+      @build.save
+      get "/build/retest/#{@build.id}"
+    end
+    it "queues the build for retesting" do
+      build.should be_queued
+    end
+    it { should be_redirect }
   end
 end

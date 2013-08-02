@@ -7,10 +7,9 @@ require 'bait/tester'
 module Bait
   class Build
     include Toy::Store
-    extend Bait::SimpleQuery
 
-    @@db_file = Bait.db_file('builds')
-    adapter :memory, Moneta.new(:YAML, :file => @@db_file)
+    adapter :memory,
+      Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
     attribute :ref, String
     attribute :owner_name, String
@@ -31,11 +30,9 @@ module Bait
     def test_later
       self.tested = false
       self.save
-      unless Bait.env == "test"
-        fork do
-          self.tester.clone!
-          self.tester.test!
-        end
+      fork do
+        self.tester.clone!
+        self.tester.test!
       end
       self
     end
@@ -46,5 +43,6 @@ module Bait
 
     after_destroy  { tester.cleanup! }
 
+    extend Bait::SimpleQuery
   end
 end

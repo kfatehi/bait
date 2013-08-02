@@ -30,7 +30,10 @@ module Bait
     end
 
     post '/build/create' do
-      build = Build.create(clone_url:params["clone_url"], name:'test')
+      build = Build.create({
+        clone_url:params["clone_url"],
+        name:params["clone_url"].split('/').last
+      })
       build.test_later
       redirect '/build'
     end
