@@ -90,7 +90,7 @@ describe Bait::Api do
       post '/build/create', {clone_url:test_url}
     end
     specify { build.clone_url.should eq test_url }
-    specify { build.name.should eq 'bait' }
+    specify { build.name.should match(/^bait/) }
     specify { build.should be_queued }
   end
 
