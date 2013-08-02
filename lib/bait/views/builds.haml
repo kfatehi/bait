@@ -5,7 +5,7 @@ Listing Builds
       .header{class:build.status}
         .status_icon= build.status
         %a{href:build.clone_url}= build.name
-        .ref build.ref
+        .ref= build.ref
       .output
         %pre= build.output
       .actions
