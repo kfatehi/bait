@@ -1,7 +1,7 @@
 require 'bait'
 require 'bait/build'
 require 'git'
-require 'pty'
+require 'open3'
 
 module Bait
   class Tester
@@ -20,22 +20,15 @@ module Bait
     end
 
     def test!
-      begin
-        begin
-          PTY.spawn(script) do |r, w, pid|
-            r.each { |line| @build.output << line }
-            @build.passed = PTY.check(pid).exitstatus == 0
-          end
-        rescue PTY::ChildExited => e
-          @build.output << e
-          @build.passed = false
-        end
-        @build.tested = true
-      rescue Errno::ENOENT => ex
-        @build.output << "A test script was expected but missing.\nError: #{ex.message}"
-      ensure
-        @build.save
+      Open3.popen2e(script) do |stdin, oe, wait_thr|
+        oe.each {|line| @build.output << line }
+        @build.passed = wait_thr.value.exitstatus == 0
       end
+      @build.tested = true
+    rescue Errno::ENOENT => ex
+      @build.output << "A test script was expected but missing.\nError: #{ex.message}"
+    ensure
+      @build.save
     end
 
     def clone_path
