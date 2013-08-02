@@ -2,9 +2,16 @@ require 'sinatra'
 require 'haml'
 require 'json'
 require 'bait/build'
+require 'sinatra/streaming'
 
 module Bait
   class Api < Sinatra::Base
+    attr_reader :subscribers
+    def initialize
+      super
+      @subscribers = []
+    end
+
     set :port, 8417
 
     get '/' do
@@ -51,5 +58,25 @@ module Bait
       build.test_later
       redirect '/build'
     end
+
+    # events
+    helpers Sinatra::Streaming
+
+    get '/events' do
+      content_type 'text/event-stream'
+      stream(:keep_open) do |out|
+        self.subscribers << out
+        out.callback { self.subscribers.delete(out) }
+      end
+    end
+
+    get '/test' do
+      self.subscribers.each do |out|
+        out << "event: build_no_log_output\n\n"
+        out << "data: foofoofoo\n\n"
+      end
+      "hi"
+    end
+
   end
 end
