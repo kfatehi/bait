@@ -87,8 +87,30 @@ describe Bait::Build do
     end
   end
 
-  describe "#html_output" do
-    before { build.output = "\e[33mHello\e[0m" ; build.save }
-    specify { build.html_output.should eq %{<span class="yellow">Hello</span>} }
+  describe "#status" do
+    subject { build.reload.status }
+    context 'queued' do
+      before do
+        build.tested = false
+        build.save
+      end
+      it { should eq "queued" }
+    end
+    context 'passed' do
+      before do
+        build.tested = true
+        build.passed = true
+        build.save
+      end
+      it { should eq "passed" }
+    end
+    context 'failed' do
+      before do
+        build.tested = true
+        build.passed = false
+        build.save
+      end
+      it { should eq "failed" }
+    end
   end
 end
