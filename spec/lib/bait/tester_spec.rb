@@ -3,91 +3,47 @@ require 'bait/tester'
 
 describe Bait::Tester do
   let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
-  let(:tester) { build.tester }
+  let(:tester) { Bait::Tester.new }
 
-  describe "#sandbox_directory" do
-    it "creates a directory on disk" do
-      Dir.exists?(tester.sandbox_directory).should be_true
-    end
-
-    it "is beneath Bait storage directory" do
-      tester.sandbox_directory.should match Bait.storage_dir
-    end
-  end
-
-  describe "#cloned?" do
-    specify { tester.should_not be_cloned }
-  end
-
-  describe "#clone!" do
-    context 'valid clone url' do
-      before { tester.clone! }
-      specify { build.output.should_not match /Failed to clone/ }
-      specify { tester.should be_cloned }
-    end
-    context "invalid clone url" do
-      let(:build) { Bait::Build.create(name: "bait", clone_url:'invalid') }
-      before { tester.clone! }
-      specify { build.output.should match /Failed to clone/ }
-      specify { tester.should_not be_cloned }
-    end
-  end
-
-  describe "#test!" do
+  describe "#perform" do
     shared_examples_for "a test run" do
       it "saves output into the build" do
-        build.output.should match "this is a test script"
+        build.reload.output.should match "this is a test script"
       end
       it "is marked as tested" do
-        build.should be_tested
+        build.reload.should be_tested
       end
-    end
-
-    before do
-      tester.clone!
     end
 
     subject { build.reload }
+    before { build.clone! }
 
-    context "does not have a test script" do
+    context "build repo did not have a test script" do
       before do
-        FileUtils.rm tester.script
-        tester.test!
+        FileUtils.rm build.script
+        tester.perform build.id
       end
       it { should_not be_tested }
       it "has errors in output" do
-        subject.output.should match /script was expected but missing/
+        build.reload.output.should match /script was expected but missing/
       end
     end
 
     context "has a test script" do
+      before do
+        write_script_with_status build.script, status
+        tester.perform build.id
+      end
       context "successful" do
-        before do
-          write_script_with_status tester.script, 0
-          tester.test!
-        end
+        let(:status) { 0 }
         it { should be_passed }
         it_behaves_like "a test run"
       end
       context 'failure' do
-        before do
-          write_script_with_status tester.script, 1
-          tester.test!
-        end
+        let(:status) { 1 }
         it { should_not be_passed }
         it_behaves_like "a test run"
       end
-    end
-  end
-
-  describe "cleanup!" do
-    before do
-      tester.clone!
-    end
-    it "removes the entire sandbox" do
-      Dir.exists?(tester.sandbox_directory).should be_true
-      tester.cleanup!
-      Dir.exists?(tester.sandbox_directory).should be_false
     end
   end
 end

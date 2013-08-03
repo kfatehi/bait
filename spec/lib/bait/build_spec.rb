@@ -41,10 +41,6 @@ describe Bait::Build do
 
   let (:build) { Bait::Build.create(name: "app", clone_url:'...') }
 
-  describe "#tester" do
-    specify { build.tester.should be_a Bait::Tester }
-  end
-
   describe "#passed" do
     it "starts as nil" do
       build.passed.should be_nil
@@ -100,6 +96,40 @@ describe Bait::Build do
         build.save
       end
       it { should eq "failed" }
+    end
+  end
+
+  describe "#sandbox_directory" do
+    it "is beneath Bait storage directory" do
+      build.sandbox_directory.should match Bait.storage_dir
+    end
+  end
+
+  describe "#cloned?" do
+    specify { build.should_not be_cloned }
+  end
+
+  describe "#clone!" do
+    context 'valid clone url' do
+      before { build.clone_url = repo_path ; build.clone! }
+      specify { build.output.should_not match /Failed to clone/ }
+      specify { build.should be_cloned }
+    end
+    context "invalid clone url" do
+      before { build.clone_url = "invalid" ; build.clone! }
+      specify { build.output.should match /Failed to clone/ }
+      specify { build.should_not be_cloned }
+    end
+  end
+
+  describe "cleanup!" do
+    before do
+      build.clone!
+    end
+    it "removes the entire sandbox" do
+      Dir.exists?(build.sandbox_directory).should be_true
+      build.cleanup!
+      Dir.exists?(build.sandbox_directory).should be_false
     end
   end
 end

@@ -22,14 +22,29 @@ module Bait
     validates_presence_of :name
     validates_presence_of :clone_url
 
-    def tester
-      Celluloid::Actor['tester'] ||= Bait::Tester.new
+    after_destroy :cleanup!
+
+    def test!
+      Open3.popen2e(self.script) do |stdin, oe, wait_thr|
+        self.running = true
+        self.save
+        oe.each do |line|
+          self.output << line
+          # self.subscribers.each {|out| out << line }
+        end
+        self.passed = wait_thr.value.exitstatus == 0
+        self.running = false
+      end
+      self.tested = true
+    rescue Errno::ENOENT => ex
+      self.output << "A test script was expected but missing.\nError: #{ex.message}"
+    ensure
+      self.save
     end
 
     def test_later
       self.tested = false
       self.save
-      self.tester.async.perform self.id
       self
     end
 
@@ -44,6 +59,45 @@ module Bait
         "passed"
       else
         "failed"
+      end
+    end
+
+    def clone_path
+      File.join(sandbox_directory, self.name)
+    end
+
+    def bait_dir
+      File.join(clone_path, ".bait")
+    end
+
+    def script
+      File.join(bait_dir, "test.sh")
+    end
+    
+    def cloned?
+      Dir.exists? File.join(clone_path, ".git/")
+    end
+
+    def cleanup!
+      FileUtils.rm_rf(sandbox_directory) if Dir.exists?(sandbox_directory)
+    end
+
+    def sandbox_directory
+      File.join Bait.storage_dir, "tester", self.name, self.id
+    end
+
+    def clone!
+      unless cloned?
+        unless Dir.exists?(sandbox_directory)
+          FileUtils.mkdir_p sandbox_directory
+        end
+        begin
+          Git.clone(clone_url, name, :path => sandbox_directory)
+        rescue => ex
+          msg = "Failed to clone #{clone_url}"
+          self.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace.join("\n")}"
+          self.save
+        end
       end
     end
   end

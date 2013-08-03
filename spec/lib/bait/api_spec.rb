@@ -97,7 +97,7 @@ describe Bait::Api do
   describe "GET /build/:id/remove" do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
-      @sandbox = @build.tester.sandbox_directory
+      @sandbox = @build.sandbox_directory
       get "/build/#{@build.id}/remove"
     end
     it "removes the build from store and its files from the filesystem" do
