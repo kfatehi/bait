@@ -2,6 +2,7 @@ require 'bait/object'
 require 'bait/tester'
 require 'json'
 require 'httparty'
+require 'celluloid'
 
 module Bait
   class Build < Bait::Object
@@ -21,16 +22,14 @@ module Bait
     validates_presence_of :name
     validates_presence_of :clone_url
 
-    after_destroy  { tester.cleanup! }
-
     def tester
-      @tester ||= Bait::Tester.new(self)
+      Celluloid::Actor['tester'] ||= Bait::Tester.new
     end
 
     def test_later
       self.tested = false
       self.save
-      Bait::Tester.async_test! self.id
+      self.tester.async.perform self.id
       self
     end
 

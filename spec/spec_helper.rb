@@ -31,7 +31,7 @@ require 'rack/test'
 
 RSpec.configure do |config|
   config.before(:suite) { clear_storage }
-  config.before(:each) { clear_db }
+  config.before(:each) { clear_db; Celluloid.shutdown; Celluloid.boot }
   config.include Bait::SpecHelpers::ScriptMaker
   config.include Rack::Test::Methods
 end

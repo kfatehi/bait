@@ -5,27 +5,23 @@ require 'open3'
 
 module Bait
   class TestJob
-
-    def perform(build_id)
-      if @build = ::Bait::Build.find(build_id)
-        puts "Found build"
-        #@build.tester.clone!
-        #@build.tester.test!
-      else
-        puts "Failed to find build!"
-      end
-    end
   end
 end
 
 module Bait
   class Tester
-    def self.async_test!(build_id)
-      TestJob.new.perform(build_id)
-    end
+    include Celluloid
 
-    def initialize build
-      @build = build
+    def perform(build_id)
+      puts "Actor was told to perform"
+      if @build = ::Bait::Build.find(build_id)
+        puts "Found build"
+        clone!
+        test!
+        self.terminate
+      else
+        puts "Build not found with id #{build_id}"
+      end
     end
 
     attr_reader :passed

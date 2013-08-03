@@ -29,11 +29,11 @@ You may also test manually by inputting a clone URL within the UI
 |          |                         |       |  | |             |
 |          |        +-------------+  |       |  | |             |
 |          |        | EventStream |  |       |  | |             |
-|     +---\|/----+  | Connection <--------------+-+------+      |
-|     |Queue Job |  |             |  |       |  | |      |      |
-|     +----+-----+  |Build Change |  |       |  | |      |      |
-|          |        |Subscription |  |       |  | |      |      |
-|          |        +--+------+---+  |/events|---->[EventSource]|
+|     +---\|/----+  | Connection  <------+   |  | |             |
+|     |Queue Job |  |             |  |   |   |  | |             |
+|     +----+-----+  |Build Events |  |   |   |  | |             |
+|          |        |Subscription |  |   |   |  | |             |
+|          |        +--+------+---+  |/events----->[EventSource]|
 |    +----\|/-----+    |      |      +---+---+  | +-------------+
 |    | Test Build |    |      |          |      |
 |    |[subprocess]+----+      +----------+      |
