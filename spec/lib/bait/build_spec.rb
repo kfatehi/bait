@@ -81,6 +81,10 @@ describe Bait::Build do
       end
       it { should eq "queued" }
     end
+    context 'testing' do
+      before { build.testing = true; build.save }
+      it { should eq 'testing' }
+    end
     context 'passed' do
       before do
         build.tested = true

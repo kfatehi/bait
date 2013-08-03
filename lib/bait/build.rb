@@ -16,7 +16,7 @@ module Bait
     attribute :passed, Boolean
     attribute :output, String, default: ""
     attribute :tested, Boolean, default: false
-    attribute :running, Boolean, default: false
+    attribute :testing, Boolean, default: false
 
     validates_presence_of :name
     validates_presence_of :clone_url
@@ -25,19 +25,19 @@ module Bait
 
     def test!
       Open3.popen2e(self.script) do |stdin, oe, wait_thr|
-        self.running = true
+        self.testing = true
         self.save
         oe.each do |line|
           self.output << line
           Bait.broadcast(self.id, {category: :output, output: line})
         end
         self.passed = wait_thr.value.exitstatus == 0
-        self.running = false
       end
       self.tested = true
     rescue Errno::ENOENT => ex
       self.output << "A test script was expected but missing.\nError: #{ex.message}"
     ensure
+      self.testing = false
       self.save
       Bait.broadcast(self.id, {category: :status, status: status})
     end
@@ -50,12 +50,15 @@ module Bait
     end
 
     def queued?
-      !self.reload.tested?
+      self.reload
+      !self.testing? && !self.tested?
     end
 
     def status
       if queued?
         "queued"
+      elsif testing?
+        "testing"
       elsif passed?
         "passed"
       else
