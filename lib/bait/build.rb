@@ -30,7 +30,7 @@ module Bait
         self.save
         oe.each do |line|
           self.output << line
-          Bait.broadcast(self.id, :test_output, line)
+          Bait.broadcast(self.id, {phase: :test, output: line})
         end
         self.passed = wait_thr.value.exitstatus == 0
         self.running = false
@@ -40,7 +40,7 @@ module Bait
       self.output << "A test script was expected but missing.\nError: #{ex.message}"
     ensure
       self.save
-      Bait.broadcast(self.id, :test_status, status)
+      Bait.broadcast(self.id, {phase: :test, status: status})
     end
 
     def test_later

@@ -1,3 +1,5 @@
+require 'json'
+
 module Bait
   class << self
     @@Subscribers = {}
@@ -23,10 +25,10 @@ module Bait
     def num_subscribers channel=nil
       get_subscribers(channel).size
     end
-    def broadcast channel, category, data
+    def broadcast channel, data
       if subscribers = @@Subscribers[channel]
         subscribers.each do |out|
-          out << "data: %%%!!!#{category}!!!#{data}!!!%%%\n\n"
+          out << "data: #{data.to_json}}\n\n"
         end
       end
     end

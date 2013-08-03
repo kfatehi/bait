@@ -60,12 +60,10 @@ module Bait
     get '/build/:id/events', provides: 'text/event-stream' do
       if build = Build.find(params['id'])
         stream(:keep_open) do |out|
-          puts "Adding a subscriber"
           Bait.add_subscriber build.id, out
           out.callback do
             Bait.remove_subscriber build.id, out
           end
-          puts Bait.num_subscribers(build.id).inspect
         end
       end
     end
