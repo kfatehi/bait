@@ -20,32 +20,26 @@ You may also test manually by inputting a clone URL within the UI
 # Architectural Overview
 
 ```
-                    Github POST bait:8417/
-______________________        \./
-|  Mac OS X 10.8     |         |
-|   w/ RubyMotion    |         |
-|  ----------------  +---------+----------------+
-|                          +---+---+            |
-|                          |  API  |----[haml]------- you
-|                          +---+---+            |
-|                              |                |
-|                       +---------+--+          |
-|                       |Bait::Build |          |
-|                       +---+-----+--+          |
-|                          \|/   /|\            |
-|                          \|/   /|\            |
-|                          \[build]\            |
-|                          \|/   /|\            |
-|    _____________         \|/   /|\            |
-|   [ your project]      +------------+         |
-|   [.bait/test.sh]------|Bait::Tester|         |
-|   [status/output]      +------------+         |
+           Github POST bait:8417/--------+
+                                         |
++----------------------------------------|------+
+|    +------------+                  +--\|/--+  | +-------------+
+|    | new Build  <------------------|  API  <----|   Browser   |
+|    +-----+------+                  |       |  | |             |
+|          |                         |       |  | |             |
+|          |        +-------------+  |       |  | |             |
+|          |        | EventStream |  |       |  | |             |
+|     +---\|/----+  | Connection <--------------+-+------+      |
+|     |Queue Job |  |             |  |       |  | |      |      |
+|     +----+-----+  |Build Change |  |       |  | |      |      |
+|          |        |Subscription |  |       |  | |      |      |
+|          |        +--+------+---+  |/events|---->[EventSource]|
+|    +----\|/-----+    |      |      +---+---+  | +-------------+
+|    | Test Build |    |      |          |      |
+|    |[subprocess]+----+      +----------+      |
+|    +------------+                             |
 |                                               |
 +-----------------------------------------------+
-
-   Bait::Build -- Persistent ToyStore
-
-   Bait::Tester -- Runs your tests and persists results in Bait::Build
 ```
 
 *Created with [JavE](http://www.jave.de/)*
