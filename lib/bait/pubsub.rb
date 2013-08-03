@@ -28,7 +28,7 @@ module Bait
     def broadcast channel, data
       if subscribers = @@Subscribers[channel]
         subscribers.each do |out|
-          out << "data: #{data.to_json}}\n\n"
+          out << "data: #{data.to_json}\n\n"
         end
       end
     end
