@@ -10,8 +10,9 @@ Listing Builds
         %pre= build.output
       .actions
         %a{href:"/build/#{build.id}/remove"} Remove
-        |
-        %a{href:"/build/#{build.id}/retest"} Retest
+        - if build.tested?
+          |
+          %a{href:"/build/#{build.id}/retest"} Retest
 
 %hr
 

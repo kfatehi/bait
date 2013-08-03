@@ -41,17 +41,6 @@ describe Bait::Build do
 
   let (:build) { Bait::Build.create(name: "app", clone_url:'...') }
 
-  describe "#test_later" do
-    it "forks in order to clone and test" do
-      build.should_receive(:fork) do |&block|
-        build.tester.should_receive(:clone!)
-        build.tester.should_receive(:test!)
-        block.call
-      end
-      build.test_later
-    end
-  end
-
   describe "#tester" do
     specify { build.tester.should be_a Bait::Tester }
   end
