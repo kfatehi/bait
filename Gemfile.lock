@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bait (0.4.1)
+    bait (0.4.2)
       git
       haml
       httparty
