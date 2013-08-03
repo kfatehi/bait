@@ -12,7 +12,7 @@ module Bait
     ##
     # Start the server
     def self.server
-      puts "Starting bait server"
+      puts "== Bait/#{Bait::VERSION} booting up..."
       require 'bait/api'
       Bait::Api.run!
     end
