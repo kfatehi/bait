@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/streaming'
 require 'haml'
 require 'json'
+require 'bait/pubsub'
 require 'bait/build'
 
 module Bait
@@ -59,11 +60,12 @@ module Bait
     get '/build/:id/events', provides: 'text/event-stream' do
       if build = Build.find(params['id'])
         stream(:keep_open) do |out|
-          settings.connections[build.id] ||= []
-          settings.connections[build.id] << out
+          puts "Adding a subscriber"
+          Bait.add_subscriber build.id, out
           out.callback do
-            settings.connections[build.id].delete(out)
+            Bait.remove_subscriber build.id, out
           end
+          puts Bait.num_subscribers(build.id).inspect
         end
       end
     end

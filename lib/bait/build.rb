@@ -2,7 +2,7 @@ require 'bait/object'
 require 'bait/tester'
 require 'json'
 require 'httparty'
-require 'celluloid'
+require 'bait/pubsub'
 
 module Bait
   class Build < Bait::Object
@@ -30,7 +30,7 @@ module Bait
         self.save
         oe.each do |line|
           self.output << line
-          # self.subscribers.each {|out| out << line }
+          Bait.broadcast(self.id, :test_output, line)
         end
         self.passed = wait_thr.value.exitstatus == 0
         self.running = false
@@ -40,12 +40,13 @@ module Bait
       self.output << "A test script was expected but missing.\nError: #{ex.message}"
     ensure
       self.save
+      Bait.broadcast(self.id, :test_status, status)
     end
 
     def test_later
       self.tested = false
       self.save
-      Bait::Tester.new.perform(self.id) unless Bait.env == "test"
+      Bait::Tester.new.async.perform(self.id) unless Bait.env == "test"
       self
     end
 
