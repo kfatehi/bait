@@ -21,21 +21,6 @@ module Bait
     validates_presence_of :name
     validates_presence_of :clone_url
 
-    before_save do
-      unless changes.empty?
-        data = changes
-        data['status'] = self.status
-        data['id'] = self.id
-        if run = changes['running']
-          if run[0] && run[1] == false
-            data['output'] = self.output
-          end
-        end
-        HTTParty.put("http://127.0.0.1:8417/build/#{self.id}/event/publish",
-          query:{ event:"message", data:data.to_json})
-      end
-    end
-
     after_destroy  { tester.cleanup! }
 
     def tester
@@ -45,10 +30,7 @@ module Bait
     def test_later
       self.tested = false
       self.save
-      fork do
-        self.tester.clone!
-        self.tester.test!
-      end
+      Bait::Tester.async_test! self.id
       self
     end
 
@@ -59,8 +41,10 @@ module Bait
     def status
       if queued?
         "queued"
-      elsif tested?
-        passed? ? "passed" : "failed"
+      elsif passed?
+        "passed"
+      else
+        "failed"
       end
     end
   end

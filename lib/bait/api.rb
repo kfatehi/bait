@@ -67,14 +67,5 @@ module Bait
         end
       end
     end
-
-    put '/build/:id/event/publish' do
-      if build = Build.find(params['id'])
-        (settings.connections[build.id] ||= []).each do |out|
-          out << "event: #{params['event']}\n\n"
-          out << "data: #{params['data'].to_json}\n\n"
-        end
-      end
-    end
   end
 end

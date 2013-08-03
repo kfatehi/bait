@@ -2,14 +2,35 @@ require 'bait'
 require 'bait/build'
 require 'git'
 require 'open3'
+require 'sucker_punch'
+
+module Bait
+  class TestJob
+    include SuckerPunch::Job
+
+    def perform(build_id)
+      if @build = ::Bait::Build.find(build_id)
+        puts "Found build"
+        @build.tester.clone!
+        @build.tester.test!
+      else
+        puts "Failed to find build!"
+      end
+    end
+  end
+end
 
 module Bait
   class Tester
-    attr_reader :passed
+    def self.async_test!(build_id)
+      TestJob.new.async.perform(build_id)
+    end
 
     def initialize build
       @build = build
     end
+
+    attr_reader :passed
 
     def bait_dir
       File.join(clone_path, ".bait")
