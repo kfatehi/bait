@@ -4,9 +4,9 @@ PATH
     bait (0.4.2)
       git
       haml
-      httparty
       moneta
       sinatra
+      sinatra-asset-snack
       sinatra-contrib
       sucker_punch
       thin
@@ -27,9 +27,15 @@ GEM
     celluloid (0.14.1)
       timers (>= 1.0.0)
     coderay (1.0.9)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.6.3)
     daemons (1.1.9)
     diff-lcs (1.2.4)
     eventmachine (1.0.3)
+    execjs (1.4.0)
+      multi_json (~> 1.0)
     ffi (1.9.0)
     formatador (0.2.4)
     git (1.2.5)
@@ -44,9 +50,6 @@ GEM
       rspec (~> 2.13)
     haml (4.0.3)
       tilt
-    httparty (0.11.0)
-      multi_json (~> 1.0)
-      multi_xml (>= 0.5.2)
     i18n (0.6.4)
     listen (1.2.2)
       rb-fsevent (>= 0.9.3)
@@ -54,9 +57,9 @@ GEM
       rb-kqueue (>= 0.2)
     lumberjack (1.0.4)
     method_source (0.8.1)
+    mime-types (1.23)
     moneta (0.7.19)
     multi_json (1.7.7)
-    multi_xml (0.5.4)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -80,6 +83,7 @@ GEM
     rspec-expectations (2.14.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.1)
+    sass (3.2.10)
     simple_uuid (0.3.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
@@ -89,6 +93,11 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
+    sinatra-asset-snack (0.1.5)
+      coffee-script
+      mime-types
+      sass
+      sinatra
     sinatra-contrib (1.4.0)
       backports (>= 2.0)
       eventmachine

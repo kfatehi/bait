@@ -1,7 +1,6 @@
 require 'bait/object'
 require 'bait/tester'
 require 'json'
-require 'httparty'
 require 'bait/pubsub'
 
 module Bait

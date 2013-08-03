@@ -4,13 +4,10 @@ module Bait
   class << self
     @@Subscribers = {}
     def add_subscriber channel, stream
-      puts "Adding a subscriber"
       @@Subscribers[channel] ||= []
       @@Subscribers[channel] << stream
-      puts Bait.num_subscribers(channel).inspect
     end
     def remove_subscriber channel, stream
-      puts "Removing a subscriber"
       if @@Subscribers[channel]
         @@Subscribers[channel].delete stream        
       end
@@ -21,9 +18,6 @@ module Bait
       else
         @@Subscribers
       end
-    end
-    def num_subscribers channel=nil
-      get_subscribers(channel).size
     end
     def broadcast channel, data
       if subscribers = @@Subscribers[channel]

@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "sinatra"
   spec.add_runtime_dependency "sinatra-contrib"
-  spec.add_runtime_dependency 'httparty'
+  spec.add_runtime_dependency 'sinatra-asset-snack'
   spec.add_runtime_dependency "moneta"
   spec.add_runtime_dependency "toystore"
   spec.add_runtime_dependency "git"
