@@ -34,5 +34,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "git"
   spec.add_runtime_dependency "haml"
   spec.add_runtime_dependency "thin"
-  spec.add_runtime_dependency 'sucker_punch'
 end

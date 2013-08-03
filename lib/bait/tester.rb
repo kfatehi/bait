@@ -2,17 +2,15 @@ require 'bait'
 require 'bait/build'
 require 'git'
 require 'open3'
-require 'sucker_punch'
 
 module Bait
   class TestJob
-    include SuckerPunch::Job
 
     def perform(build_id)
       if @build = ::Bait::Build.find(build_id)
         puts "Found build"
-        @build.tester.clone!
-        @build.tester.test!
+        #@build.tester.clone!
+        #@build.tester.test!
       else
         puts "Failed to find build!"
       end
@@ -23,7 +21,7 @@ end
 module Bait
   class Tester
     def self.async_test!(build_id)
-      TestJob.new.async.perform(build_id)
+      TestJob.new.perform(build_id)
     end
 
     def initialize build

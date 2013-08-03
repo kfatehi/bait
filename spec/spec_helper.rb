@@ -11,8 +11,6 @@ end
 require 'bait'
 require 'fileutils'
 
-require 'sucker_punch/testing/inline'
-
 def repo_path
   path = File.join(File.dirname(__FILE__), '..')
   File.expand_path(path)
