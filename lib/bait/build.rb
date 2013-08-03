@@ -45,6 +45,7 @@ module Bait
     def test_later
       self.tested = false
       self.save
+      Bait::Tester.new.perform(self.id) unless Bait.env == "test"
       self
     end
 
