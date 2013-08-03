@@ -10,6 +10,9 @@ module Bait
     # Start the server
     def self.server
       puts "Starting bait server"
+
+      require 'celluloid/autostart'
+      
       require 'bait/api'
       Bait::Api.run!
     end

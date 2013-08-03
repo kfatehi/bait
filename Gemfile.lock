@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     bait (0.4.1)
+      celluloid
       git
       haml
       httparty
@@ -23,6 +24,8 @@ GEM
     adapter (0.7.0)
     backports (3.3.3)
     builder (3.0.4)
+    celluloid (0.14.1)
+      timers (>= 1.0.0)
     coderay (1.0.9)
     daemons (1.1.9)
     diff-lcs (1.2.4)
@@ -100,6 +103,7 @@ GEM
       rack (>= 1.0.0)
     thor (0.18.1)
     tilt (1.4.1)
+    timers (1.1.0)
     toystore (0.13.2)
       activemodel (~> 3.0)
       activesupport (~> 3.0)
