@@ -137,4 +137,16 @@ describe Bait::Api do
       last_response.content_type.should match(/text\/event-stream/)
     end
   end
+
+  describe "GET /events" do
+    let (:connect!) { get "/events" }
+    it "adds a global subscriber" do
+      Bait.should_receive(:add_subscriber).with(:global, anything()).once
+      connect!
+    end
+    it "provides an event stream connection" do
+      connect!
+      last_response.content_type.should match(/text\/event-stream/)
+    end
+  end
 end

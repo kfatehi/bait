@@ -44,7 +44,7 @@ describe Bait::Build do
   describe "hooks" do
     describe "after_create hook" do
       it "broadcasts its creation" do
-        Bait.should_receive(:broadcast).with(:global, kind_of(Hash))
+        Bait.should_receive(:broadcast).with(:global, :new_build, kind_of(Bait::Build))
         build
       end
     end
@@ -52,7 +52,7 @@ describe Bait::Build do
     describe "after_destroy hook" do
       before { build }
       it "broadcasts its removal" do
-        Bait.should_receive(:broadcast).with(build.id, {category: :removal})
+        Bait.should_receive(:broadcast).with(build.id, :remove)
         build.destroy
       end
     end

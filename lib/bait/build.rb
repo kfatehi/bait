@@ -22,12 +22,12 @@ module Bait
     validates_presence_of :clone_url
 
     after_create do
-      Bait.broadcast(:global, {category: :new_build, build: self})
+      Bait.broadcast(:global, :new_build, self)
     end
 
     after_destroy do
+      Bait.broadcast(self.id, :remove)
       self.cleanup!
-      Bait.broadcast(self.id, {category: :removal})
     end
 
     def test!
@@ -36,7 +36,7 @@ module Bait
         self.save
         oe.each do |line|
           self.output << line
-          Bait.broadcast(self.id, {category: :output, output: line})
+          Bait.broadcast(self.id, :output, line)
         end
         self.passed = wait_thr.value.exitstatus == 0
       end
@@ -46,7 +46,7 @@ module Bait
     ensure
       self.testing = false
       self.save
-      Bait.broadcast(self.id, {category: :status, status: status})
+      Bait.broadcast(self.id, :status, status)
     end
 
     def test_later

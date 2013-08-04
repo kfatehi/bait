@@ -72,5 +72,14 @@ module Bait
         end
       end
     end
+
+    get '/events', provides: 'text/event-stream' do
+      stream(:keep_open) do |out|
+        Bait.add_subscriber :global, out
+        out.callback do
+          Bait.remove_subscriber :global, out
+        end
+      end
+    end
   end
 end

@@ -18,6 +18,17 @@ describe Bait::Tester do
     subject { build.reload }
     before { build.clone! }
 
+    describe "real-time events" do
+      before do
+        write_script_with_status build.script, 0
+      end
+      it "push log output directly to the browser" do
+        Bait.should_receive(:broadcast).with(build.id, :output, kind_of(String))
+        Bait.should_receive(:broadcast).with(build.id, :status, 'passed')
+        tester.perform build.id
+      end
+    end
+
     context "build repo did not have a test script" do
       before do
         FileUtils.rm build.script

@@ -12,10 +12,10 @@ module Bait
         @@Subscribers[channel].delete stream        
       end
     end
-    def broadcast channel, data
+    def broadcast channel, *args
       if subscribers = @@Subscribers[channel]
         subscribers.each do |out|
-          out << "data: #{data.to_json}\n\n"
+          out << "data: #{args.to_json}\n\n"
         end
       end
     end
