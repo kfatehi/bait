@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'bait/build'
 
 describe Bait::Build do
-    subject { Bait::Build }
+  subject { Bait::Build }
 
   describe ".all" do
     context "with nothing in the store" do
@@ -40,6 +40,23 @@ describe Bait::Build do
   end
 
   let (:build) { Bait::Build.create(name: "app", clone_url:'...') }
+
+  describe "hooks" do
+    describe "after_create hook" do
+      it "broadcasts its creation" do
+        Bait.should_receive(:broadcast).with(:global, kind_of(Hash))
+        build
+      end
+    end
+
+    describe "after_destroy hook" do
+      before { build }
+      it "broadcasts its removal" do
+        Bait.should_receive(:broadcast).with(build.id, {category: :removal})
+        build.destroy
+      end
+    end
+  end
 
   describe "#passed" do
     it "starts as nil" do
@@ -134,10 +151,6 @@ describe Bait::Build do
       Dir.exists?(build.sandbox_directory).should be_true
       build.cleanup!
       Dir.exists?(build.sandbox_directory).should be_false
-    end
-    it "broadcasts its removal" do
-      Bait.should_receive(:broadcast).with(build.id, {category: :removal})
-      build.cleanup!
     end
   end
 end

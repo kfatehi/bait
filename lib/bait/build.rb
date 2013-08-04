@@ -21,7 +21,14 @@ module Bait
     validates_presence_of :name
     validates_presence_of :clone_url
 
-    after_destroy :cleanup!
+    after_create do
+      Bait.broadcast(:global, {category: :new_build, build: self})
+    end
+
+    after_destroy do
+      self.cleanup!
+      Bait.broadcast(self.id, {category: :removal})
+    end
 
     def test!
       Open3.popen2e(self.script) do |stdin, oe, wait_thr|
@@ -84,7 +91,6 @@ module Bait
 
     def cleanup!
       FileUtils.rm_rf(sandbox_directory) if Dir.exists?(sandbox_directory)
-      Bait.broadcast(self.id, {category: :removal})
     end
 
     def sandbox_directory
