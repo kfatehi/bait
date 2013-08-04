@@ -1,4 +1,6 @@
 window.Build =
+  find: (id) -> $("##{id}")
+
   all: (cb) -> $.getJSON '/build', (data) -> cb(data)
 
   DOM:
@@ -24,7 +26,7 @@ window.Build =
           return false
 
     init: (build_id) ->
-      build = $("##{build_id}")
+      build = Build.find(build_id)
 
       # Color the output logs
       pre = build.find(".output pre")

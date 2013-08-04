@@ -4,6 +4,7 @@ Zepto ($) ->
   Build.all (builds) ->
     $.each builds, (i,d) ->
       Build.List.add d.build
+    $("#loading").remove()
 
   Bait.subscribe
     global:
@@ -11,11 +12,11 @@ Zepto ($) ->
         Build.List.add data.build
     build:
       output: (id, text) ->
-        pre = $("##{id}").find('pre')
+        pre = Build.find(id).find('pre')
         pre.append ansi2html(text)
       status: (id, text) ->
-        header = $("##{id}").find(".header")
+        header = Build.find(id).find(".header")
         header.find(".status").html text
         header.attr "class", "header #{text}"
       remove: (id) ->
-        $("##{id}").remove()
+        Build.find(id).remove()
