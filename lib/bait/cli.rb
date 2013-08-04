@@ -1,6 +1,3 @@
-require 'celluloid'
-require 'bait/build'
-
 module Bait
   module CLI
     USAGE = %{usage:
@@ -15,6 +12,13 @@ module Bait
       puts "== Bait/#{Bait::VERSION} booting up..."
       require 'bait/api'
       Bait::Api.run!
+    end
+
+    ##
+    # Start the Ncurses GUI
+    def self.ncurses
+      require 'bait/gui/init'
+      Bait::GUI.init!
     end
 
     ##
