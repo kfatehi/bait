@@ -12,13 +12,6 @@ module Bait
         @@Subscribers[channel].delete stream        
       end
     end
-    def get_subscribers channel=nil
-      if channel
-        @@Subscribers[channel]
-      else
-        @@Subscribers
-      end
-    end
     def broadcast channel, data
       if subscribers = @@Subscribers[channel]
         subscribers.each do |out|

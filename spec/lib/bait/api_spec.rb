@@ -128,9 +128,13 @@ describe Bait::Api do
   describe "GET /build/:id/events" do
     let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
     let (:connect!) { get "/build/#{build.id}/events" }
+    it "adds a subscriber to the build" do
+      Bait.should_receive(:add_subscriber).with(build.id, anything()).once
+      connect!
+    end
     it "provides an event stream connection" do
       connect!
-      last_response.content_type.should match /text\/event-stream/
+      last_response.content_type.should match(/text\/event-stream/)
     end
   end
 end
