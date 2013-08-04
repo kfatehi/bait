@@ -135,5 +135,9 @@ describe Bait::Build do
       build.cleanup!
       Dir.exists?(build.sandbox_directory).should be_false
     end
+    it "broadcasts its removal" do
+      Bait.should_receive(:broadcast).with(build.id, {category: :removal})
+      build.cleanup!
+    end
   end
 end

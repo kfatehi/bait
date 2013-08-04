@@ -1,0 +1,30 @@
+.build {
+  border-radius:12px;
+  border:2px solid RGB(201,49,20);
+  margin:20px;
+  .header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 5px;
+    position:relative;
+    .status {
+      top:4px;
+      right:4px;
+      position:absolute;
+    }
+  }
+  .header.passed {
+    background-color:RGB(71,213,86);
+  }
+  .header.failed {
+    background-color: RGB(247,65,67);
+  }
+  .output pre {
+    cursor:pointer;
+    color: white;
+    background-color:black;
+    max-height:100px;
+    overflow-y:hidden;
+    overflow-x:scroll;
+  }
+}

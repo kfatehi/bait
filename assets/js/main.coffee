@@ -1,6 +1,5 @@
 each_build = (cb) ->
-  builds = $(".build")
-  $.each builds, (i, e) ->
+  $.each $(".build"), (i,e) ->
     cb $(e)
 
 enable_expander = (el) ->
@@ -10,10 +9,8 @@ enable_expander = (el) ->
     else
       el.css "max-height", "100px"
 
-L = (og) ->
-  console.log og
 Zepto ($) ->
-  each_build ((build) ->
+  each_build (build) ->
     
     # Color the output logs
     pre = build.find(".output pre")
@@ -22,7 +19,7 @@ Zepto ($) ->
     # Enable expansion toggle
     enable_expander pre
     
-    # Listen for events
+    # Each build may emit events
     source = new EventSource("/build/" + build.attr("id") + "/events")
     source.addEventListener "message", (e) ->
       data = JSON.parse(e.data)
@@ -31,10 +28,7 @@ Zepto ($) ->
           pre.append data.output
         when "status"
           header = build.find(".header")
-          header.find(".status_icon").html data.status
+          header.find(".status").html data.status
           header.attr "class", "header " + data.status
-        else
-          console.log "nothing"
-
-  ), false
-
+        when "removal"
+          build.remove()

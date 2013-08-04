@@ -3,7 +3,7 @@ Listing Builds
   - @builds.each do |build|
     %li.build{id:build.id}
       .header{class:build.status}
-        .status_icon= build.status
+        .status= build.status
         %a{href:build.clone_url}= build.name
         .ref= build.ref
       .output

@@ -84,6 +84,7 @@ module Bait
 
     def cleanup!
       FileUtils.rm_rf(sandbox_directory) if Dir.exists?(sandbox_directory)
+      Bait.broadcast(self.id, {category: :removal})
     end
 
     def sandbox_directory
