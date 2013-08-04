@@ -66,7 +66,9 @@ describe Bait::Api do
 
   describe "GET /" do
     before { get '/' }
-    it { should be_redirect }
+    it "renders the loading screen" do
+      subject.body.should match /Loading/
+    end
   end
 
   describe "GET /build"  do
@@ -78,9 +80,8 @@ describe Bait::Api do
 
     it { should be_ok }
 
-    it "shows the builds" do
-      subject.body.should match /quickfox/
-      subject.body.should match /slowsloth/
+    it "returns the builds as JSON" do
+      JSON.parse(subject.body).should have(2).items
     end
   end
 

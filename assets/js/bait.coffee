@@ -9,12 +9,3 @@ window.Bait =
       data = JSON.parse(e.data)
       handler = handlers[data[0]][data[1]]
       handler.apply(@, data.slice(2))
-
-  GuiHelpers:
-    # Click log to expand/collapse
-    enable_expander: (el) ->
-      el.on "click", (e) ->
-        if el.css("max-height") is "100px"
-          el.css "max-height", "100%"
-        else
-          el.css "max-height", "100px"

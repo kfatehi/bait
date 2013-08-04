@@ -16,7 +16,7 @@ module Bait
     asset_map '/stylesheets/application.css', ['assets/stylesheets/**/*.css', 'assets/stylesheets/**/*.scss']
 
     get '/' do
-      redirect '/build'
+      haml :builds
     end
 
     post '/' do
@@ -33,8 +33,9 @@ module Bait
     end
 
     get '/build' do
+      content_type :json
       @builds = Bait::Build.all
-      haml :builds
+      @builds.to_json
     end
 
     post '/build/create' do
