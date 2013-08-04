@@ -29,10 +29,10 @@ module Bait
     end
 
     def test!
+      self.status = "testing"
+      self.broadcast :status, self.status
+      self.save
       Open3.popen2e(self.script) do |stdin, oe, wait_thr|
-        self.status = "testing"
-        self.broadcast :status, self.status
-        self.save
         oe.each do |line|
           self.output << line
           self.broadcast(:output, line)

@@ -1,6 +1,3 @@
-require 'celluloid'
-require 'bait/build'
-
 module Bait
   module CLI
     USAGE = %{usage:
