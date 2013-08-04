@@ -52,15 +52,9 @@ describe Bait::Build do
     describe "after_destroy hook" do
       before { build }
       it "broadcasts its removal" do
-        Bait.should_receive(:broadcast).with(build.id, :remove)
+        Bait.should_receive(:broadcast).with(:build, :remove, build.id)
         build.destroy
       end
-    end
-  end
-
-  describe "#passed" do
-    it "starts as nil" do
-      build.passed.should be_nil
     end
   end
 
@@ -73,50 +67,6 @@ describe Bait::Build do
       Bait::Build.ids.should have(1).item
       @build.destroy
       Bait::Build.ids.should be_empty
-    end
-  end
-
-  describe "#queued" do
-    subject { build }
-    context "already tested" do
-      before { build.tested = true ; build.save }
-      it { should_not be_queued }
-    end
-
-    context "not tested" do
-      before { build.tested = false ; build.save }
-      it { should be_queued }
-    end
-  end
-
-  describe "#status" do
-    subject { build.reload.status }
-    context 'queued' do
-      before do
-        build.tested = false
-        build.save
-      end
-      it { should eq "queued" }
-    end
-    context 'testing' do
-      before { build.testing = true; build.save }
-      it { should eq 'testing' }
-    end
-    context 'passed' do
-      before do
-        build.tested = true
-        build.passed = true
-        build.save
-      end
-      it { should eq "passed" }
-    end
-    context 'failed' do
-      before do
-        build.tested = true
-        build.passed = false
-        build.save
-      end
-      it { should eq "failed" }
     end
   end
 

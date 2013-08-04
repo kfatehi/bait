@@ -2,21 +2,16 @@ require 'json'
 
 module Bait
   class << self
-    @@Subscribers = {}
-    def add_subscriber channel, stream
-      @@Subscribers[channel] ||= []
-      @@Subscribers[channel] << stream
+    @@Subscribers = []
+    def add_subscriber stream
+      @@Subscribers << stream
     end
-    def remove_subscriber channel, stream
-      if @@Subscribers[channel]
-        @@Subscribers[channel].delete stream        
-      end
+    def remove_subscriber stream
+      @@Subscribers.delete stream        
     end
-    def broadcast channel, *args
-      if subscribers = @@Subscribers[channel]
-        subscribers.each do |out|
-          out << "data: #{args.to_json}\n\n"
-        end
+    def broadcast *args
+      @@Subscribers.each do |out|
+        out << "data: #{args.to_json}\n\n"
       end
     end
   end

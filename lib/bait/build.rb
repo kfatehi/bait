@@ -13,10 +13,8 @@ module Bait
     attribute :owner_email, String
     attribute :name, String
     attribute :clone_url, String
-    attribute :passed, Boolean
     attribute :output, String, default: ""
-    attribute :tested, Boolean, default: false
-    attribute :testing, Boolean, default: false
+    attribute :status, String, default: "queued"
 
     validates_presence_of :name
     validates_presence_of :clone_url
@@ -26,51 +24,47 @@ module Bait
     end
 
     after_destroy do
-      Bait.broadcast(self.id, :remove)
+      self.broadcast(:remove)
       self.cleanup!
     end
 
     def test!
       Open3.popen2e(self.script) do |stdin, oe, wait_thr|
-        self.testing = true
+        self.status = "testing"
+        self.broadcast :status, self.status
         self.save
         oe.each do |line|
           self.output << line
-          Bait.broadcast(self.id, :output, line)
+          self.broadcast(:output, line)
         end
-        self.passed = wait_thr.value.exitstatus == 0
+        if wait_thr.value.exitstatus == 0
+          self.status = "passed"
+        else
+          self.status = "failed"
+        end
       end
-      self.tested = true
     rescue Errno::ENOENT => ex
       self.output << "A test script was expected but missing.\nError: #{ex.message}"
+      self.status = "script missing"
     ensure
-      self.testing = false
       self.save
-      Bait.broadcast(self.id, :status, status)
+      self.broadcast(:status, status)
     end
 
     def test_later
-      self.tested = false
+      self.status = "queued"
+      self.output = ""
       self.save
       Bait::Tester.new.async.perform(self.id) unless Bait.env == "test"
       self
     end
 
     def queued?
-      self.reload
-      !self.testing? && !self.tested?
+      self.reload.status == "queued"
     end
 
-    def status
-      if queued?
-        "queued"
-      elsif testing?
-        "testing"
-      elsif passed?
-        "passed"
-      else
-        "failed"
-      end
+    def passed?
+      self.reload.status == "passed"
     end
 
     def clone_path
@@ -110,6 +104,12 @@ module Bait
           self.save
         end
       end
+    end
+
+    protected
+
+    def broadcast attr, *args
+      Bait.broadcast :build, attr, self.id, *args
     end
   end
 end

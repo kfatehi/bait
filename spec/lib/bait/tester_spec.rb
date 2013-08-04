@@ -10,9 +10,6 @@ describe Bait::Tester do
       it "saves output into the build" do
         build.reload.output.should match "this is a test script"
       end
-      it "is marked as tested" do
-        build.reload.should be_tested
-      end
     end
 
     subject { build.reload }
@@ -22,9 +19,10 @@ describe Bait::Tester do
       before do
         write_script_with_status build.script, 0
       end
-      it "push log output directly to the browser" do
-        Bait.should_receive(:broadcast).with(build.id, :output, kind_of(String))
-        Bait.should_receive(:broadcast).with(build.id, :status, 'passed')
+      it "push updates directly to the browser" do
+        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'testing')
+        Bait.should_receive(:broadcast).with(:build, :output, build.id, kind_of(String))
+        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'passed')
         tester.perform build.id
       end
     end
@@ -34,9 +32,11 @@ describe Bait::Tester do
         FileUtils.rm build.script
         tester.perform build.id
       end
-      it { should_not be_tested }
       it "has errors in output" do
         build.reload.output.should match /script was expected but missing/
+      end
+      it "has a useful status" do
+        build.reload.status.should eq "script missing"
       end
     end
 

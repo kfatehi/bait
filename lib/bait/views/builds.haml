@@ -1,26 +1,7 @@
-Listing Builds
-%ul
-  - @builds.each do |build|
-    %li.build{id:build.id}
-      .header{class:build.status}
-        .status= build.status
-        %a{href:build.clone_url}= build.name
-        .ref= build.ref
-      .output
-        %pre= build.output
-      .actions
-        %a{href:"/build/#{build.id}/remove"} Remove
-        |
-        %a{href:"/build/#{build.id}/retest"} Retest
-
+%ul#builds
+  %li Loading builds...
 %hr
-
 .manual_clone
-  To clone manually without waiting for a post-receive hook, enter the following and hit submit
-  %form{ :action => "/build/create", :method => "post"}
-    %fieldset
-      %ol
-        %li
-          %label{:for => "clone_url"} clone_url:
-          %input{:type => "text", :name => "clone_url", :class => "text"}
-      %input{:type => "submit", :value => "Go", :class => "button"}
+  Manually clone a local or remote repository: 
+  %input{:type => "text", :name => "clone_url", :class => "text"}
+  %button Go

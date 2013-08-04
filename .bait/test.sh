@@ -5,4 +5,4 @@ cd $project_dir
 
 echo "bundling"
 bundle > /dev/null 2>&1
-bundle exec rspec spec
+bundle exec rspec spec --color --format documentation

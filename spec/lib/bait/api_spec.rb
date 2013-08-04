@@ -94,54 +94,38 @@ describe Bait::Api do
     specify { build.should be_queued }
   end
 
-  describe "GET /build/:id/remove" do
+  describe "DELETE /build/:id" do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
       @sandbox = @build.sandbox_directory
-      get "/build/#{@build.id}/remove"
+      delete "/build/#{@build.id}"
     end
     it "removes the build from store and its files from the filesystem" do
       expect{@build.reload}.to raise_error Toy::NotFound
       Bait::Build.ids.should be_empty
       Pathname.new(@sandbox).should_not exist
     end
-    it { should be_redirect }
   end
 
-  describe "GET /build/:id/retest" do
+  describe "POST /build/:id/retest" do
     before do
       @build = Bait::Build.create(name: "quickfox", clone_url:'...')
-      @build.tested = true
       @build.output = "bla bla old output"
       @build.save
-      get "/build/#{@build.id}/retest"
+      post "/build/#{@build.id}/retest"
     end
     it "queues the build for retesting" do
-      @build.reload.should be_queued
+      @build.reload.status.should eq 'queued'
     end
     it "clears the previous output" do
       @build.reload.output.should be_blank
-    end
-    it { should be_redirect }
-  end
-
-  describe "GET /build/:id/events" do
-    let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
-    let (:connect!) { get "/build/#{build.id}/events" }
-    it "adds a subscriber to the build" do
-      Bait.should_receive(:add_subscriber).with(build.id, anything()).once
-      connect!
-    end
-    it "provides an event stream connection" do
-      connect!
-      last_response.content_type.should match(/text\/event-stream/)
     end
   end
 
   describe "GET /events" do
     let (:connect!) { get "/events" }
-    it "adds a global subscriber" do
-      Bait.should_receive(:add_subscriber).with(:global, anything()).once
+    it "adds a global and build subscriber" do
+      Bait.should_receive(:add_subscriber).with(anything()).once
       connect!
     end
     it "provides an event stream connection" do
