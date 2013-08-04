@@ -24,18 +24,18 @@ You may also test manually by inputting a clone URL within the UI
                                          |
 +----------------------------------------|------+
 |    +------------+                  +--\|/--+  | +-------------+
-|    | new Build  <------------------|  API  <----|   Browser   |
+|    | new Build  <------------------|  API  <------  GET /     |
 |    +-----+------+                  |       |  | |             |
 |          |                         |       |  | |             |
+|          |                         |/build------> Build.all() |
 |          |        +-------------+  |       |  | |             |
-|          |        | EventStream |  |       |  | |             |
-|     +---\|/----+  | Connection  <------+   |  | |             |
-|     |Queue Job |  |             |  |   |   |  | |             |
-|     +----+-----+  |Build Events |  |   |   |  | |             |
-|          |        |Subscription |  |   |   |  | |             |
+|     +---\|/----+  |Subscription <------+   |  | |             |
+|     |Queue Job |  |  to Build   |  |   |   |  | | UI Changes  |
+|     +----+-----+  |   Event     |  |   |   |  | |     |       |
+|          |        | Broadcasts  |  |   |   |  | |     |       |
 |          |        +--+------+---+  |/events----->[EventSource]|
 |    +----\|/-----+    |      |      +---+---+  | +-------------+
-|    | Test Build |    |      |          |      |
+|    |  Workers   |    |      |          |      |
 |    |[subprocess]+----+      +----------+      |
 |    +------------+                             |
 |                                               |
