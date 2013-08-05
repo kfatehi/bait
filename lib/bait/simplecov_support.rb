@@ -7,6 +7,7 @@ module Bait
     def check_for_simplecov
       if File.exists? simplecov_html_path
         self.simplecov = true
+        self.broadcast :simplecov, 'supported'
         self.save
       end
     end

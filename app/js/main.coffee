@@ -20,3 +20,7 @@ Zepto ($) ->
         header.attr "class", "header #{text}"
       remove: (id) ->
         Build.find(id).remove()
+      simplecov: (id, supported) ->
+        link = Build.find(id).find('.simplecov')
+        link.attr 'href', Build.SimpleCov.url(id)
+        link.text Build.SimpleCov.text(supported)

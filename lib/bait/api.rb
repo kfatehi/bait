@@ -7,8 +7,14 @@ require 'bait/pubsub'
 require 'bait/build'
 
 unless Bait.env == "production"
-  require 'sinatra/asset_snack'
+  require 'sinatra/asset_snack' 
   DYNAMIC_ASSETS = true
+  require 'fileutils'
+  public = File.join File.dirname(__FILE__), %w(public)
+  [%w(js application.js), %w(css application.css)].each do |i|
+    path = File.join(public, i)
+    FileUtils.rm(path) if File.exists?(path)
+  end
 end
 
 module Bait

@@ -9,7 +9,7 @@ window.ManualClone =
         if not button.attr('disabled')
           button.attr('disabled', 'disabled')
           $.post '/build/create', {clone_url: input}, (response) ->
-            console.log response
+            field.val('')
             button.removeAttr('disabled')
       else
         alert "Enter a local path or remote url to a git repo, e.g.:\n

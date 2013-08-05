@@ -47,6 +47,12 @@ window.Build =
         $('ul#builds').append html
       Build.DOM.init build.id
 
+  SimpleCov:
+    url: (id) ->
+      "/build/#{id}/coverage/index.html"
+    text: (truthy) ->
+      if truthy then "Coverage" else ""
+
   to_html: (build) ->
     """
     <li id="#{build.id}" class="build">
@@ -54,6 +60,9 @@ window.Build =
         <div class="status">#{build.status}</div>
         <a href="#{build.clone_url}">#{build.name}</a>
         <div class="ref">#{build.ref?=''}</div>
+        <a href="#{Build.SimpleCov.url(build.id)}"
+           class="simplecov">
+             #{Build.SimpleCov.text(build.simplecov)}</a>
       </div>
       <div class="output">
         <pre>#{build.output}</pre>

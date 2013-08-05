@@ -104,7 +104,33 @@ describe Bait::Build do
     end
   end
 
-  describe "simplecov" do
-    specify { build.simplecov.should be_false }
+  describe "simplecov support" do
+    context 'has simplecov files' do
+      before do
+        FileUtils.mkdir_p File.dirname build.simplecov_html_path
+        FileUtils.touch build.simplecov_html_path
+      end
+      it "sends an event that it discovered simplecov" do
+        Bait.should_receive(:broadcast).with(:build, :simplecov, build.id, 'supported')
+        build.check_for_simplecov
+      end
+      it "sets the simplecov flag to true" do
+        build.reload.simplecov.should be_false
+        build.check_for_simplecov
+        build.reload.simplecov.should be_true
+      end
+    end
+
+    context 'has no simplecov files' do
+      before { build }
+      it "does not broadcast a simplecov supported message" do
+        Bait.should_not_receive(:broadcast).with(:build, :simplecov, build.id, 'supported')
+        build.check_for_simplecov
+      end
+      it "does not set the simplecov flag to true" do
+        build.check_for_simplecov
+        build.reload.simplecov.should be_false
+      end
+    end
   end
 end

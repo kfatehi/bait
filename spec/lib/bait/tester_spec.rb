@@ -6,12 +6,6 @@ describe Bait::Tester do
   let(:tester) { Bait::Tester.new }
 
   describe "#perform" do
-    shared_examples_for "a test run" do
-      it "saves output into the build" do
-        build.reload.output.should match "this is a test script"
-      end
-    end
-
     subject { build.reload }
     before { build.clone! }
 
@@ -45,19 +39,17 @@ describe Bait::Tester do
         write_script_with_status build.script('test'), status
         tester.perform build.id
       end
+
+      shared_examples_for "a test run" do
+        it "saves output into the build" do
+          build.reload.output.should match "this is a test script"
+        end
+      end
+
       context "successful" do
         let(:status) { 0 }
         it { should be_passed }
         it_behaves_like "a test run"
-
-        describe "simplecov support" do
-          before do
-            FileUtils.mkdir File.dirname build.simplecov_html_path
-            FileUtils.touch build.simplecov_html_path
-            build.check_for_simplecov
-          end
-          specify { build.reload.simplecov.should be_true }
-        end
       end
       context 'failure' do
         let(:status) { 1 }
