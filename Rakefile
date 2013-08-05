@@ -28,8 +28,9 @@ namespace :assets do
 end
 
 
-def git_branch
-  `git branch | grep '*'`.strip
+def git_master?
+  `git branch | grep '* master'`
+  $?.exitstatus == 0
 end
 
 def git_dirty?
@@ -42,7 +43,7 @@ namespace :gem do
     if git_dirty?
       puts "dirty! commit first before building"
     else
-      if git_branch == "master"
+      if git_master?
         puts "On master branch"
         `rspec spec`
         if $?.exitstatus == 0
