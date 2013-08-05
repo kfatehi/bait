@@ -1,6 +1,7 @@
 require 'bait/object'
 require 'bait/tester'
 require 'bait/build_helper'
+require 'bait/simplecov_support'
 require 'bait/pubsub'
 require 'bait/phase'
 require 'json'
@@ -8,10 +9,12 @@ require 'json'
 module Bait
   class Build < Bait::Object
     include Bait::BuildHelper
+    include Bait::SimpleCovSupport
 
     adapter :memory,
       Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
+    attribute :simplecov, Boolean, default: false
     attribute :ref, String
     attribute :owner_name, String
     attribute :owner_email, String
@@ -60,7 +63,7 @@ module Bait
         end
         self.save
         self.broadcast(:status, self.status)
-        # good place to check for a coverage report
+        check_for_simplecov
       end.run!
     end
 

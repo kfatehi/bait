@@ -134,4 +134,18 @@ describe Bait::Api do
       last_response.content_type.should match(/text\/event-stream/)
     end
   end
+
+  describe "GET /build/:id/coverage/index.html" do
+    before do
+      @build = Bait::Build.create(name: "quickfox", clone_url:'...')
+      FileUtils.mkdir_p File.dirname @build.simplecov_html_path
+      File.open(@build.simplecov_html_path, "w") {|f| f.puts "test string" }
+      @build.simplecov = true
+      @build.save
+      get "/build/#{@build.id}/coverage/index.html"
+    end
+    it "renders the file" do
+      last_response.body.strip.should eq "test string"
+    end
+  end
 end

@@ -7,8 +7,14 @@ require 'bait/pubsub'
 require 'bait/build'
 
 unless Bait.env == "production"
-  require 'sinatra/asset_snack'
+  require 'sinatra/asset_snack' 
   DYNAMIC_ASSETS = true
+  require 'fileutils'
+  public = File.join File.dirname(__FILE__), %w(public)
+  [%w(js application.js), %w(css application.css)].each do |i|
+    path = File.join(public, i)
+    FileUtils.rm(path) if File.exists?(path)
+  end
 end
 
 module Bait
@@ -70,6 +76,15 @@ module Bait
         out.callback do
           Bait.remove_subscriber out
         end
+      end
+    end
+
+    ##
+    # SimpleCov Passthrough
+    get '/build/:id/coverage/*' do
+      build = Build.find params[:id]
+      if build.simplecov
+        send_file File.join(build.coverage_dir, params[:splat])
       end
     end
   end

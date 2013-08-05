@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-ENV['RACK_ENV'] = 'production'
+ENV['RACK_ENV'] ||= 'production'
 require 'rubygems'
 require 'bait/cli'
 Bait::CLI.send(ARGV[0] || :server)
