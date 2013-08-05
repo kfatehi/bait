@@ -1,1 +1,52 @@
-{:mime_type=>"text/css", :body=>"\n\n/** build.scss **/\n\n.build {\n  border-radius: 12px;\n  border: 2px solid RGB(201, 49, 20);\n  margin: 20px; }\n  .build .header {\n    border-top-left-radius: 10px;\n    border-top-right-radius: 10px;\n    padding: 5px;\n    position: relative; }\n    .build .header .status {\n      top: 4px;\n      right: 4px;\n      position: absolute; }\n  .build .header.passed {\n    background-color: RGB(71, 213, 86); }\n  .build .header.failed {\n    background-color: RGB(247, 65, 67); }\n  .build .output pre {\n    cursor: pointer;\n    color: white;\n    background-color: black;\n    max-height: 100px;\n    overflow-y: hidden;\n    overflow-x: scroll; }\n\n\n/** main.scss **/\n\n@font-face {\n  font-family: 'Ubuntu';\n  font-style: normal;\n  font-weight: 400;\n  src: local(\"Ubuntu\"), url(/fonts/ubuntu.woff) format(\"woff\"); }\n\nbody {\n  font-family: 'Ubuntu';\n  background-color: RGB(255, 254, 254); }\n\n.actions {\n  background-color: RGB(254, 238, 195);\n  text-align: center;\n  border-bottom-left-radius: 10px;\n  border-bottom-right-radius: 10px; }\n  .actions a {\n    color: RGB(20, 77, 105);\n    text-decoration: none; }\n  .actions a:hover {\n    color: RGB(201, 49, 20); }\n"}
+
+
+/** build.scss **/
+
+.build {
+  border-radius: 12px;
+  border: 2px solid RGB(201, 49, 20);
+  margin: 20px; }
+  .build .header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 5px;
+    position: relative; }
+    .build .header .status {
+      top: 4px;
+      right: 4px;
+      position: absolute; }
+  .build .header.passed {
+    background-color: RGB(71, 213, 86); }
+  .build .header.failed {
+    background-color: RGB(247, 65, 67); }
+  .build .output pre {
+    cursor: pointer;
+    color: white;
+    background-color: black;
+    max-height: 100px;
+    overflow-y: hidden;
+    overflow-x: scroll; }
+
+
+/** main.scss **/
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Ubuntu"), url(/fonts/ubuntu.woff) format("woff"); }
+
+body {
+  font-family: 'Ubuntu';
+  background-color: RGB(255, 254, 254); }
+
+.actions {
+  background-color: RGB(254, 238, 195);
+  text-align: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px; }
+  .actions a {
+    color: RGB(20, 77, 105);
+    text-decoration: none; }
+  .actions a:hover {
+    color: RGB(201, 49, 20); }

@@ -1,3 +1,4 @@
+require 'bait'
 require 'sinatra'
 require 'sinatra/streaming'
 require 'sinatra/asset_snack'
@@ -11,10 +12,12 @@ module Bait
     set :port, 8417
     set server: 'thin'
 
-    register Sinatra::AssetSnack
+    unless Bait.env == "production"
+      register Sinatra::AssetSnack
 
-    asset_map '/js/application.js', ['app/js/**/*.js', 'app/js/**/*.coffee']
-    asset_map '/css/application.css', ['app/css/**/*.css', 'app/css/**/*.scss']
+      asset_map '/js/application.js', ['app/js/**/*.js', 'app/js/**/*.coffee']
+      asset_map '/css/application.css', ['app/css/**/*.css', 'app/css/**/*.scss']
+    end
 
     get '/' do
       haml :builds

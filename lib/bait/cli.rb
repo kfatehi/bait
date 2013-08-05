@@ -1,3 +1,5 @@
+require 'bait'
+
 module Bait
   module CLI
     USAGE = %{usage:
@@ -9,7 +11,7 @@ module Bait
     ##
     # Start the server
     def self.server
-      puts "== Bait/#{Bait::VERSION} booting up..."
+      puts "** Bait/#{Bait::VERSION} booting up in #{Bait.env} environment"
       require 'bait/api'
       Bait::Api.run!
     end

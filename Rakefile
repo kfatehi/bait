@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = "development"
+
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 
@@ -9,7 +11,6 @@ task :pry do
   require 'pry'; binding.pry
 end
 
-
 namespace :assets do
   task :precompile do
     public = File.join File.dirname(__FILE__), %w(lib bait public)
@@ -19,7 +20,40 @@ namespace :assets do
       compiled_path = File.join public, assets[:route]
       puts "compiling #{compiled_path}"
       File.open(compiled_path, 'w') do |file|
-        file.puts compile assets[:paths]
+        response = compile assets[:paths]
+        file.write response[:body]
+      end
+    end
+  end
+end
+
+
+def git_branch
+  `git branch | grep '*'`.strip
+end
+
+def git_dirty?
+  `git status --porcelain`.match(/^\sM/)
+end
+
+namespace :gem do
+  task :build => 'assets:precompile' do
+    `bundle install`
+    if git_dirty?
+      puts "dirty! commit first before building"
+    else
+      if git_branch == "master"
+        puts "On master branch"
+        `rspec spec`
+        if $?.exitstatus == 0
+          puts "Specs pass. you're ready"
+          puts `gem build bait.gemspec`
+          puts "Done! You can gem push that now"
+        else
+          puts "Uhh.. you have failing specs -- not building the gem"
+        end
+      else
+        puts "I'll only build the gem on the master branch"
       end
     end
   end
