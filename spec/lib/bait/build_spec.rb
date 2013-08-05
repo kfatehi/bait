@@ -103,4 +103,8 @@ describe Bait::Build do
       Dir.exists?(build.sandbox_directory).should be_false
     end
   end
+
+  describe "simplecov" do
+    specify { build.simplecov.should be_false }
+  end
 end

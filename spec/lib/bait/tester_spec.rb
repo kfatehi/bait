@@ -49,6 +49,15 @@ describe Bait::Tester do
         let(:status) { 0 }
         it { should be_passed }
         it_behaves_like "a test run"
+
+        describe "simplecov support" do
+          before do
+            FileUtils.mkdir File.dirname build.simplecov_html_path
+            FileUtils.touch build.simplecov_html_path
+            build.check_for_simplecov
+          end
+          specify { build.reload.simplecov.should be_true }
+        end
       end
       context 'failure' do
         let(:status) { 1 }
