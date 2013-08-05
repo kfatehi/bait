@@ -58,4 +58,15 @@ namespace :gem do
       end
     end
   end
+
+  task :push => :build do
+    require "bait/version"
+    gem = "bait-#{Bait::VERSION}.gem"
+    if File.exists?(gem)
+      puts "Pushing gem to rubygems"
+      puts `gem push #{gem}`
+    else
+      puts "File not found #{gem}"
+    end
+  end
 end
