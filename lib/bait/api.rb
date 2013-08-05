@@ -1,20 +1,23 @@
 require 'bait'
 require 'sinatra'
 require 'sinatra/streaming'
-require 'sinatra/asset_snack'
 require 'haml'
 require 'json'
 require 'bait/pubsub'
 require 'bait/build'
+
+unless Bait.env == "production"
+  require 'sinatra/asset_snack'
+  DYNAMIC_ASSETS = true
+end
 
 module Bait
   class Api < Sinatra::Base
     set :port, 8417
     set server: 'thin'
 
-    unless Bait.env == "production"
+    if defined? DYNAMIC_ASSETS
       register Sinatra::AssetSnack
-
       asset_map '/js/application.js', ['app/js/**/*.js', 'app/js/**/*.coffee']
       asset_map '/css/application.css', ['app/css/**/*.css', 'app/css/**/*.scss']
     end

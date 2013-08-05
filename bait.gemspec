@@ -25,10 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency 'rack-test'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'sinatra-asset-snack'
 
   spec.add_runtime_dependency "sinatra"
   spec.add_runtime_dependency "sinatra-contrib"
-  spec.add_runtime_dependency 'sinatra-asset-snack'
   spec.add_runtime_dependency "moneta"
   spec.add_runtime_dependency "toystore"
   spec.add_runtime_dependency "git"

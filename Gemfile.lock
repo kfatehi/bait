@@ -1,12 +1,11 @@
 PATH
   remote: .
   specs:
-    bait (0.5.1)
+    bait (0.5.2)
       git
       haml
       moneta
       sinatra
-      sinatra-asset-snack
       sinatra-contrib
       sucker_punch
       thin
@@ -133,3 +132,4 @@ DEPENDENCIES
   rake
   rspec
   simplecov
+  sinatra-asset-snack
