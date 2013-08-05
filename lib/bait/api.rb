@@ -78,5 +78,14 @@ module Bait
         end
       end
     end
+
+    ##
+    # SimpleCov Passthrough
+    get '/build/:id/coverage/*' do
+      build = Build.find params[:id]
+      if build.simplecov
+        send_file File.join(build.coverage_dir, params[:splat])
+      end
+    end
   end
 end
