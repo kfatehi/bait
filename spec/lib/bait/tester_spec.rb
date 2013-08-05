@@ -17,7 +17,7 @@ describe Bait::Tester do
 
     describe "real-time events" do
       before do
-        write_script_with_status build.script, 0
+        write_script_with_status build.script("test"), 0
       end
       it "push updates directly to the browser" do
         Bait.should_receive(:broadcast).with(:build, :status, build.id, 'testing')
@@ -29,11 +29,11 @@ describe Bait::Tester do
 
     context "build repo did not have a test script" do
       before do
-        FileUtils.rm build.script
+        FileUtils.rm build.script("test")
         tester.perform build.id
       end
       it "has errors in output" do
-        build.reload.output.should match /script was expected but missing/
+        build.reload.output.should match /was expected but is missing/
       end
       it "has a useful status" do
         build.reload.status.should eq "script missing"
@@ -42,7 +42,7 @@ describe Bait::Tester do
 
     context "has a test script" do
       before do
-        write_script_with_status build.script, status
+        write_script_with_status build.script('test'), status
         tester.perform build.id
       end
       context "successful" do

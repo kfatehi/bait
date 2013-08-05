@@ -11,6 +11,7 @@ module Bait
       if @build = ::Bait::Build.find(build_id)
         @build.clone!
         @build.test!
+        # @build.analyze!
       end
     end
   end

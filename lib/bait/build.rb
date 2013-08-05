@@ -1,10 +1,14 @@
 require 'bait/object'
 require 'bait/tester'
-require 'json'
+require 'bait/build_helper'
 require 'bait/pubsub'
+require 'bait/phase'
+require 'json'
 
 module Bait
   class Build < Bait::Object
+    include Bait::BuildHelper
+
     adapter :memory,
       Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
@@ -28,29 +32,6 @@ module Bait
       self.cleanup!
     end
 
-    def test!
-      self.status = "testing"
-      self.broadcast :status, self.status
-      self.save
-      Open3.popen2e(self.script) do |stdin, oe, wait_thr|
-        oe.each do |line|
-          self.output << line
-          self.broadcast(:output, line)
-        end
-        if wait_thr.value.exitstatus == 0
-          self.status = "passed"
-        else
-          self.status = "failed"
-        end
-      end
-    rescue Errno::ENOENT => ex
-      self.output << "A test script was expected but missing.\nError: #{ex.message}"
-      self.status = "script missing"
-    ensure
-      self.save
-      self.broadcast(:status, status)
-    end
-
     def test_later
       self.status = "queued"
       self.output = ""
@@ -59,36 +40,31 @@ module Bait
       self
     end
 
-    def queued?
-      self.reload.status == "queued"
-    end
-
-    def passed?
-      self.reload.status == "passed"
-    end
-
-    def clone_path
-      File.join(sandbox_directory, self.name)
-    end
-
-    def bait_dir
-      File.join(clone_path, ".bait")
-    end
-
-    def script
-      File.join(bait_dir, "test.sh")
-    end
-    
-    def cloned?
-      Dir.exists? File.join(clone_path, ".git/")
-    end
-
-    def cleanup!
-      FileUtils.rm_rf(sandbox_directory) if Dir.exists?(sandbox_directory)
-    end
-
-    def sandbox_directory
-      File.join Bait.storage_dir, "tester", self.name, self.id
+    def test!
+      phase = Bait::Phase.new(self.script("test"))
+      self.status = 'testing'
+      self.save
+      self.broadcast(:status, self.status)
+      phase.on(:output) do |line|
+        self.output << line
+        self.broadcast(:output, line)
+      end
+      phase.on(:missing) do |message|
+        self.output << message
+        self.status = "script missing"
+        self.save
+      end
+      phase.on(:done) do |zerostatus|
+        if zerostatus
+          self.status = "passed"
+        else
+          self.status = "failed"
+        end
+        self.save
+        self.broadcast(:status, self.status)
+        # good place to check for a coverage report
+      end
+      phase.run!
     end
 
     def clone!
