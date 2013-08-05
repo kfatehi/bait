@@ -25,7 +25,10 @@ module Bait
         puts "Run 'bait init' to create it"
         exit 1
       else
-        system(script)
+        system script
+        status = $?.exitstatus
+        puts "exited with status #{status}"
+        exit status
       end
     end
 
