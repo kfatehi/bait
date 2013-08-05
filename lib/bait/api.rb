@@ -8,12 +8,13 @@ require 'bait/build'
 
 module Bait
   class Api < Sinatra::Base
-    register Sinatra::AssetSnack
     set :port, 8417
     set server: 'thin'
 
-    asset_map '/javascript/application.js', ['assets/js/**/*.js', 'assets/js/**/*.coffee']
-    asset_map '/stylesheets/application.css', ['assets/stylesheets/**/*.css', 'assets/stylesheets/**/*.scss']
+    register Sinatra::AssetSnack
+
+    asset_map '/js/application.js', ['app/js/**/*.js', 'app/js/**/*.coffee']
+    asset_map '/css/application.css', ['app/css/**/*.css', 'app/css/**/*.scss']
 
     get '/' do
       haml :builds
