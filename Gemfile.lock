@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bait (0.5.0)
+    bait (0.5.1)
       git
       haml
       moneta
