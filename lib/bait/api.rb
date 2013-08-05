@@ -6,7 +6,7 @@ require 'json'
 require 'bait/pubsub'
 require 'bait/build'
 
-unless Bait.env == "production"
+if Bait.env != "production"
   require 'sinatra/asset_snack' 
   DYNAMIC_ASSETS = true
   require 'fileutils'

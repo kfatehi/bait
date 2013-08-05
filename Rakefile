@@ -38,23 +38,24 @@ def git_dirty?
 end
 
 namespace :gem do
-  task :build => 'assets:precompile' do
+  task :build do
     `bundle install`
-    if git_dirty?
-      puts "dirty! commit first before building"
+    if !git_master?
+      puts "I'll only build the gem on the master branch"
     else
-      if git_master?
-        puts "On master branch"
-        `rspec spec`
-        if $?.exitstatus == 0
-          puts "Specs pass. you're ready"
-          puts `gem build bait.gemspec`
-          puts "Done! You can gem push that now"
-        else
-          puts "Uhh.. you have failing specs -- not building the gem"
-        end
+      puts "On master branch"
+      `rspec spec`
+      if $?.exitstatus != 0
+        puts "Uhh.. you have failing specs -- not building the gem"
       else
-        puts "I'll only build the gem on the master branch"
+        puts "Specs pass. you're ready"
+        Rake::Task['assets:precompile'].invoke
+        if git_dirty?
+          puts "Dirty working tree! Commit first before building!"
+          exit
+        end
+        puts `gem build bait.gemspec`
+        puts "Done! You can gem push that now"
       end
     end
   end
