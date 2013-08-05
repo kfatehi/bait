@@ -10,7 +10,9 @@ module Bait
     def perform(build_id)
       if @build = ::Bait::Build.find(build_id)
         @build.clone!
-        @build.test!
+        if @build.cloned?
+          @build.test!
+        end
         # @build.analyze!
       end
     end
