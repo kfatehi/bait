@@ -1,7 +1,7 @@
 module Bait
   class Phase
     class UnexpectedHandlerDefinition < StandardError ; end
-    POSSIBLE_HANDLERS = %w(output rescue missing done)
+    POSSIBLE_HANDLERS = %w(init output rescue missing done)
 
     def initialize script
       @script = script
@@ -14,12 +14,14 @@ module Bait
       else
         raise UnexpectedHandlerDefinition
       end
+      self
     end
 
     alias_method :on, :handle
 
     def run!
       if File.exists?(@script)
+        handler(:init)
         zerostatus = execute_subprocess do |output_line|
           handler(:output, output_line)
         end

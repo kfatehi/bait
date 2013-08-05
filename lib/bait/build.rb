@@ -41,20 +41,18 @@ module Bait
     end
 
     def test!
-      phase = Bait::Phase.new(self.script("test"))
-      self.status = 'testing'
-      self.save
-      self.broadcast(:status, self.status)
-      phase.on(:output) do |line|
+      Bait::Phase.new(self.script("test")).on(:init) do
+        self.status = 'testing'
+        self.save
+        self.broadcast(:status, self.status)
+      end.on(:output) do |line|
         self.output << line
         self.broadcast(:output, line)
-      end
-      phase.on(:missing) do |message|
+      end.on(:missing) do |message|
         self.output << message
         self.status = "script missing"
         self.save
-      end
-      phase.on(:done) do |zerostatus|
+      end.on(:done) do |zerostatus|
         if zerostatus
           self.status = "passed"
         else
@@ -63,22 +61,21 @@ module Bait
         self.save
         self.broadcast(:status, self.status)
         # good place to check for a coverage report
-      end
-      phase.run!
+      end.run!
     end
 
     def clone!
-      unless cloned?
-        unless Dir.exists?(sandbox_directory)
-          FileUtils.mkdir_p sandbox_directory
-        end
-        begin
-          Git.clone(clone_url, name, :path => sandbox_directory)
-        rescue => ex
-          msg = "Failed to clone #{clone_url}"
-          self.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace.join("\n")}"
-          self.save
-        end
+      return if cloned?
+      unless Dir.exists?(sandbox_directory)
+        FileUtils.mkdir_p sandbox_directory
+      end
+      begin
+        Git.clone(clone_url, name, :path => sandbox_directory)
+      rescue => ex
+        msg = "Failed to clone #{clone_url}"
+        self.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace.join("\n")}"
+        self.status = "failed to clone"
+        self.save
       end
     end
 
