@@ -59,6 +59,15 @@ bait provides a Sinatra endpoint for the github push event webhook.
 When the repo is cloned, an bait executes a file relative to your
 project. This file must exist in order to use bait: `.bait/test.sh`
 
+## SimpleCov Support
+
+If your test suite builds the path `coverage/index.html` such as SimpleCov does
+then bait will detect it and provide access to it from a link in the UI.
+
+This feature was introduced in bait v0.5.4
+
+# Extended Information
+
 ## .bait/test.sh
 
 In this file you will run your test suite. **Be sure to make it
