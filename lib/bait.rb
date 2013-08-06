@@ -1,38 +1,47 @@
 require "bait/version"
 require 'moneta'
 require 'fileutils'
+require 'bait/assets'
 
 module Bait
-  def self.storage_dir
-    path = File.join("#{self.home}", "#{self.env}")
-    FileUtils.mkdir_p path
-    path
-  end
+  class << self
+    include Bait::Assets
 
-  def self.db_dir
-    db_dir = File.join self.storage_dir, "databases"
-    FileUtils.mkdir_p db_dir
-    db_dir
-  end
-
-  def self.db_file name
-    yaml_file = File.join self.db_dir, "#{name}.yaml"
-    FileUtils.touch yaml_file
-    yaml_file
-  end
-
-  def self.store
-    @store ||= begin
-      Moneta.new :YAML, :file => db_file("main")
+    def storage_dir
+      path = File.join("#{home}", "#{env}")
+      FileUtils.mkdir_p path
+      path
     end
-  end
 
-  def self.env
-    ENV['RACK_ENV'] ||= 'production'
-  end
+    def db_dir
+      db_dir = File.join storage_dir, "databases"
+      FileUtils.mkdir_p db_dir
+      db_dir
+    end
 
-  def self.home
-    File.join Etc.getpwuid.dir, '.bait'
+    def db_file name
+      yaml_file = File.join db_dir, "#{name}.yaml"
+      FileUtils.touch yaml_file
+      yaml_file
+    end
+
+    def store
+      @store ||= begin
+        Moneta.new :YAML, :file => db_file("main")
+      end
+    end
+
+    def env
+      ENV['RACK_ENV'] ||= 'production'
+    end
+
+    def home
+      File.join Etc.getpwuid.dir, '.bait'
+    end
+
+    def public
+      Pathname.new(File.join(File.dirname(__FILE__), 'bait', 'public'))
+    end
   end
 end
 

@@ -8,8 +8,9 @@
     %script{src:'/js/ansi2html.js'}
     %script{src:'/js/application.js'}
   %body
-    #nav
-      %a{href:'/'}Home
     #content
       = yield
+    %hr
+    #footer
+      %center Bait/#{Bait::VERSION} #{Bait.env}
 
