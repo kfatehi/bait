@@ -4808,7 +4808,6 @@ td.visible-print {
 
 .build {
   border-radius: 12px;
-  border: 2px solid RGB(201, 49, 20);
   margin: 20px; }
   .build .header {
     border-top-left-radius: 10px;

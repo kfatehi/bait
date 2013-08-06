@@ -12,7 +12,6 @@ module Bait
     # Start the server
     def self.server
       puts "** Bait/#{Bait::VERSION} booting up in #{Bait.env} environment"
-      puts Bait.env
       if Bait.env == "production" && Bait.assets.missing?
         Bait.assets.compile!
       end
