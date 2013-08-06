@@ -9,8 +9,19 @@
     %script{src:'/js/application.js'}
   %body
     #content
+      .navbar
+        %a.navbar-brand{:href => "#"} Bait
+        %ul.nav.navbar-nav
+          %li.active
+            %a{:href => "#"} Main
+          %li
+            .manual_clone
+              Manually clone a local or remote repository:
+              %input{:type => "text", :name => "clone_url", :class => "text"}
+              %button Go
+      %hr
       = yield
     %hr
-    #footer
+    %footer
       %center Bait/#{Bait::VERSION} #{Bait.env}
 
