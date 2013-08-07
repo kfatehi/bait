@@ -13,8 +13,10 @@ end
 
 namespace :assets do
   task :precompile do
-    require 'bait'
-    Bait.assets.compile!
+    require 'bait/api'
+    print "Compiling assets ... "
+    Sinatra::AssetSnack.precompile!
+    puts "Done!"
   end
 end
 
