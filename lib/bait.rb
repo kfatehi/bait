@@ -2,6 +2,7 @@ require "bait/version"
 require 'moneta'
 require 'fileutils'
 require 'bait/assets'
+require 'pathname'
 
 module Bait
   class << self
