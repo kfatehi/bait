@@ -11,19 +11,14 @@ task :pry do
   require 'pry'; binding.pry
 end
 
-namespace :assets do
-  task :precompile do
-    require 'bait/api'
-    print "Compiling assets ... "
-    Sinatra::AssetSnack.precompile!
-    puts "Done!"
-  end
-end
-
 def git_master?
   `git branch | grep '* master'`
   $?.exitstatus == 0
 end
+
+APP_FILE = "lib/bait/api.rb"
+require 'sinatra/asset_snack/rake'
+namespace(:assets) { task :precompile => 'assetsnack:build' }
 
 namespace :git do
   task :dirty do
