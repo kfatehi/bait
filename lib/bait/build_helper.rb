@@ -17,7 +17,7 @@ module Bait
     end
 
     def script name
-      File.join(bait_dir, "#{name}.sh")
+      File.join(bait_dir, name)
     end
 
     def cloned?

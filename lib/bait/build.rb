@@ -1,5 +1,5 @@
 require 'bait/object'
-require 'bait/tester'
+require 'bait/integrator'
 require 'bait/build_helper'
 require 'bait/simplecov_support'
 require 'bait/pubsub'
@@ -35,17 +35,13 @@ module Bait
       self.cleanup!
     end
 
-    def test_later
-      self.status = "queued"
-      self.output = ""
-      self.save
-      Bait::Tester.new.async.perform(self.id) unless Bait.env == "test"
-      self
+    def phases
+      ["test.sh", "coffeelint.rb"]
     end
 
-    def test!
-      Bait::Phase.new(self.script("test")).on(:init) do
-        self.status = 'testing'
+    def enter_phase name
+      Bait::Phase.new(self.script(name)).on(:init) do
+        self.status = "phase: #{name}"
         self.save
         self.broadcast(:status, self.status)
       end.on(:output) do |line|
@@ -53,7 +49,7 @@ module Bait
         self.broadcast(:output, line)
       end.on(:missing) do |message|
         self.output << message
-        self.status = "script missing"
+        self.status = "missing: #{name}"
         self.save
       end.on(:done) do |zerostatus|
         if zerostatus
@@ -65,6 +61,14 @@ module Bait
         self.broadcast(:status, self.status)
         check_for_simplecov
       end.run!
+    end
+
+    def integrate_later
+      self.status = "queued"
+      self.output = ""
+      self.save
+      Bait::Integrator.new.async.perform(self.id) unless Bait.env == "test"
+      self
     end
 
     def clone!

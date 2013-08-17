@@ -5,15 +5,16 @@ require 'open3'
 require 'sucker_punch'
 
 module Bait
-  class Tester
+  class Integrator
     include SuckerPunch::Job
     def perform(build_id)
       if @build = ::Bait::Build.find(build_id)
         @build.clone!
         if @build.cloned?
-          @build.test!
+          @build.phases.each do |script|
+            @build.enter_phase script
+          end
         end
-        # @build.analyze!
       end
     end
   end

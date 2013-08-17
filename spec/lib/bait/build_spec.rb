@@ -104,6 +104,9 @@ describe Bait::Build do
     end
   end
 
+  # TODO 
+  # simplecov support => html output for a phase
+
   describe "simplecov support" do
     context 'has simplecov files' do
       before do
@@ -131,6 +134,12 @@ describe Bait::Build do
         build.check_for_simplecov
         build.reload.simplecov.should be_false
       end
+    end
+  end
+
+  describe "#phases" do
+    it "outputs scripts in the order defined in bire.yml" do
+      build.phases.should eq ["test.sh", "coffeelint.rb"]
     end
   end
 end

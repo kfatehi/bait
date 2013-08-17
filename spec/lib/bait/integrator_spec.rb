@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'bait/tester'
+require 'bait/integrator'
 
-describe Bait::Tester do
+describe Bait::Integrator do
   let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
-  let(:tester) { Bait::Tester.new }
+  let(:worker) { Bait::Integrator.new }
 
   describe "#perform" do
     subject { build.reload }
@@ -11,33 +11,34 @@ describe Bait::Tester do
 
     describe "real-time events" do
       before do
-        write_script_with_status build.script("test"), 0
+        write_script_with_status build.script("test.sh"), 0
       end
       it "push updates directly to the browser" do
-        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'testing')
+        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'phase: test.sh')
         Bait.should_receive(:broadcast).with(:build, :output, build.id, kind_of(String))
         Bait.should_receive(:broadcast).with(:build, :status, build.id, 'passed')
-        tester.perform build.id
+        worker.perform build.id
       end
     end
 
     context "build repo did not have a test script" do
       before do
-        FileUtils.rm build.script("test")
-        tester.perform build.id
+        FileUtils.rm build.script("test.sh")
+        FileUtils.rm build.script("coffeelint.rb")
+        worker.perform build.id
       end
       it "has errors in output" do
         build.reload.output.should match /was expected but is missing/
       end
       it "has a useful status" do
-        build.reload.status.should eq "script missing"
+        build.reload.status.should eq "missing: coffeelint.rb"
       end
     end
 
     context "has a test script" do
       before do
-        write_script_with_status build.script('test'), status
-        tester.perform build.id
+        write_script_with_status build.script('test.sh'), status
+        worker.perform build.id
       end
 
       shared_examples_for "a test run" do

@@ -32,7 +32,7 @@ module Bait
           owner_name: push["repository"]["owner"]["name"],
           owner_email: push["repository"]["owner"]["email"],
           ref: push["ref"]
-        }).test_later
+        }).integrate_later
       end
     end
 
@@ -47,7 +47,7 @@ module Bait
         clone_url:params["clone_url"],
         name:params["clone_url"].split('/').last
       })
-      build.test_later
+      build.integrate_later
     end
 
     delete '/build/:id' do
@@ -56,7 +56,7 @@ module Bait
 
     post '/build/:id/retest' do
       build = Build.find params['id']
-      build.test_later
+      build.integrate_later
     end
 
     helpers Sinatra::Streaming

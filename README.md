@@ -1,7 +1,7 @@
-Bait
+Bire
 ====
 
-`bait` is a build and integration tester
+`bire`: build integration readiness examiner (pronounce like beer!)
 
 # Usage
 
