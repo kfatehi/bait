@@ -1,6 +1,10 @@
 require 'spec_helper'
 require 'bait/integrator'
 
+def expect_event(*args)
+  Bait.should_receive(:broadcast).with(:build, *args)
+end
+
 describe Bait::Integrator do
   let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
   let(:worker) { Bait::Integrator.new }
@@ -15,10 +19,10 @@ describe Bait::Integrator do
         write_script_with_status build.script("coffeelint.rb"), 0
       end
       it "push updates directly to the browser" do
-        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'phase: test.sh')
-        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'phase: coffeelint.rb')
-        Bait.should_receive(:broadcast).with(:build, :output, build.id, kind_of(String)).exactly(2).times
-        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'passed').exactly(2).times
+        expect_event(:status, build.id, 'phase: test.sh')
+        expect_event(:status, build.id, 'phase: coffeelint.rb')
+        expect_event(:output, build.id, kind_of(String)).exactly(2).times
+        expect_event(:status, build.id, 'passed').exactly(2).times
         worker.perform build.id
       end
     end

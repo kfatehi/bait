@@ -35,7 +35,7 @@ window.Build =
         pre.html ansi2html(output)
       
       # Enable expansion toggle
-      Build.DOM.UIHelper.expand_toggle pre  
+      Build.DOM.UIHelper.expand_toggle pre
       Build.DOM.UIHelper.enable_links build
 
   List:
