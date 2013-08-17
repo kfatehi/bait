@@ -138,8 +138,16 @@ describe Bait::Build do
   end
 
   describe "#phases" do
+    before do
+      FileUtils.mkdir_p build.bait_dir
+      File.open(File.join(build.bait_dir, "bire.yml"), "w") do |f|
+        f.puts "---"
+        f.puts "- foo.py"
+        f.puts "- bar.php"
+      end
+    end
     it "outputs scripts in the order defined in bire.yml" do
-      build.phases.should eq ["test.sh", "coffeelint.rb"]
+      build.phases.should eq ["foo.py", "bar.php"]
     end
   end
 end

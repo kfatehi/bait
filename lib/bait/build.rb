@@ -5,6 +5,7 @@ require 'bait/simplecov_support'
 require 'bait/pubsub'
 require 'bait/phase'
 require 'json'
+require 'yaml'
 
 module Bait
   class Build < Bait::Object
@@ -36,7 +37,7 @@ module Bait
     end
 
     def phases
-      ["test.sh", "coffeelint.rb"]
+      YAML.load_file(File.join(self.bait_dir, "bire.yml"))
     end
 
     def enter_phase name

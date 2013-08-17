@@ -12,11 +12,13 @@ describe Bait::Integrator do
     describe "real-time events" do
       before do
         write_script_with_status build.script("test.sh"), 0
+        write_script_with_status build.script("coffeelint.rb"), 0
       end
       it "push updates directly to the browser" do
         Bait.should_receive(:broadcast).with(:build, :status, build.id, 'phase: test.sh')
-        Bait.should_receive(:broadcast).with(:build, :output, build.id, kind_of(String))
-        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'passed')
+        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'phase: coffeelint.rb')
+        Bait.should_receive(:broadcast).with(:build, :output, build.id, kind_of(String)).exactly(2).times
+        Bait.should_receive(:broadcast).with(:build, :status, build.id, 'passed').exactly(2).times
         worker.perform build.id
       end
     end
