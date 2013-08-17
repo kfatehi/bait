@@ -6,7 +6,7 @@ module Bait
       * bait .................... alias for bait server
       * bait server ............. start the bait server
       * bait init ............... setup current directory as a bait project
-    * bait test ............... simulate this repo being tested with bait}
+      * bait test ............... simulate this repo being tested with bait}
 
     ##
     # Start the server

@@ -39,7 +39,7 @@ describe Bait::Integrator do
 
     context "has a test script" do
       before do
-        FileUtils.rm build.script('coffeelint.rb')
+        write_script_with_status build.script("coffeelint.rb"), status
         write_script_with_status build.script('test.sh'), status
         worker.perform build.id
       end
