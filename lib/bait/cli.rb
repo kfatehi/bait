@@ -3,9 +3,9 @@ require 'bait'
 module Bait
   module CLI
     USAGE = %{usage:
-    * bait .................... alias for bait server
-    * bait server ............. start the bait server
-    * bait init ............... setup current directory as a bait project
+      * bait .................... alias for bait server
+      * bait server ............. start the bait server
+      * bait init ............... setup current directory as a bait project
     * bait test ............... simulate this repo being tested with bait}
 
     ##
@@ -13,7 +13,7 @@ module Bait
     def self.server
       puts "** Bait/#{Bait::VERSION} booting up in #{Bait.env} environment"
       if Bait.env == "production" && Bait.assets.missing?
-        Bait.assets.precompile
+        Bait.assets.compile!
       end
       require 'bait/api'
       Bait::Api.run!

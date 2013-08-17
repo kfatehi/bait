@@ -8,9 +8,20 @@
     %script{src:'/js/ansi2html.js'}
     %script{src:'/js/application.js'}
   %body
-    #content
-      = yield
-    %hr
-    #footer
+    .navbar
+      %a.navbar-brand{:href => "#"} Bait
+      %ul.nav.navbar-nav
+        %li.active
+          %a{:href => "#"} Builds
+        %li
+          .manual_clone
+            Manually clone a local or remote repository:
+            %input{:type => "text", :name => "clone_url", :class => "text"}
+            %button Go
+    .container
+      #content
+        = yield
+        %hr
+    %footer
       %center Bait/#{Bait::VERSION} #{Bait.env}
 
