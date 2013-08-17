@@ -4,6 +4,7 @@
 }
 
 .build {
+  border: 1px solid black;
   border-radius:12px;
   margin:20px;
   .header {
@@ -31,5 +32,7 @@
     overflow-y:hidden;
     overflow-x:scroll;
     margin-bottom:0px;
+    border:none;
+    border-radius:0;
   }
 }
