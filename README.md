@@ -1,7 +1,7 @@
-Bire
+ARTCI
 ====
 
-`bire`: build integration readiness examiner (pronounce like beer!)
+`artci`: Application Readiness Testing & Continuous Integration
 
 # Usage
 
