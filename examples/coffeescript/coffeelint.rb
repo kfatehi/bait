@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+##
+# First you should npm install -g coffeelint
 #
 # Use:
 #
@@ -49,3 +51,4 @@ if ARGV.length > 0
 else
   runner.lint 0
 end
+
