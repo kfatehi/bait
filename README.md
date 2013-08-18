@@ -1,19 +1,40 @@
-ARTCI
+Bait
 ====
 
-`artci`: Application Readiness Testing & Continuous Integration
+executable is `bait`, standing for Build And Integration Tester
+I'm conflicted about the name, another is artci: Application-Readiness-Test-based Continuous Integration
+
+The most important thing to know about this project is this:
+
+You are the only one that knows how your software "integrates" and the
+truth is that this is about people and process as much as about code.
+
+If some of your developers test, and some don't, those that don't are 
+kind of a liability so the best way to push them to grow is to give them
+the benefit of all these tools in the awesome open source culture
+
+As you write scripts that make this program useful in different
+contexts please contribute them to the Wiki.
+
+After you gem install, you setup your projects this way:
+
+Step 1. cd into your project
+Step 2. bait init
+Step 3. bait test
+
+Commit the new directory and scripts and you will be able to use the project with bait.
+
+See examples/ for scripts for various types of projects.
 
 # Usage
 
-Install the gem and then just run `bait`
+Install the gem and then run `bait`
 
-A sinatra server will start up. YAML files will be stored in ~/.bait
+A sinatra server will start up. YAML files and temp repos will be stored in ~/.bait
 
 Go to 0.0.0.0:8417
 
 You can set your Github to notify the server on that port.
-
-When github notifies bait, bait will clone the project and execute ~/.bait/test.sh and record exit value and output
 
 You may also test manually by inputting a clone URL within the UI
 
@@ -48,16 +69,19 @@ You may also test manually by inputting a clone URL within the UI
 
 You can use any datastore you want that is supported in [Moneta](https://github.com/minad/moneta)
 
-By default, bait will store the data as YAML files in `~/bait`
+By default, bait will store the data as YAML files in `~/.bait`
 
-# Functional Overview
+# Features
+
+## List-Of-Scripts Configuration
+
+After you `bait init` you will see how this works
 
 ## Github Webhook Support
 
 bait provides a Sinatra endpoint for the github push event webhook.
 
-When the repo is cloned, an bait executes a file relative to your
-project. This file must exist in order to use bait: `.bait/test.sh`
+It will clone and run the list of scripts automatically
 
 ## SimpleCov Support
 
@@ -66,88 +90,4 @@ then bait will detect it and provide access to it from a link in the UI.
 
 This feature was introduced in bait v0.5.4
 
-# Extended Information
-
-## .bait/test.sh
-
-In this file you will run your test suite. **Be sure to make it
-executable `chmod a+x .bait/test.sh`**
-
-This file should output whatever you want to STDOUT and/or STDERR and
-return 0 for passing and non-zero for failure.
-
-### Examples
-
-#### Ruby Projects
-
-##### [project root]/.bait/test.sh
-```bash
-#!/bin/bash
-bait_dir=$(dirname $0)
-project_dir="$bait_dir/.."
-cd $project_dir
-
-echo "bundling"
-bundle install > /dev/null 2>&1
-bundle exec rspec spec
-```
-
-#### RubyMotion Projects
-
-##### [project root]/.bait/test.sh
-```bash
-#!/bin/bash
-bait_dir=$(dirname $0)
-project_dir="$bait_dir/.."
-cd $project_dir
-
-export BUNDLE_GEMFILE=$project_dir/Gemfile
-
-echo "bundling"
-bundle install > /dev/null 2>&1
-bundle exec motion-specwrap
-```
-
-An example project that will work on bait can be [found
-here](https://github.com/keyvanfatehi/baitmotion)
-
-There is a bug in RubyMotion where the exit value isn't reported
-properly, that's why we are using
-[motion-specwrap](https://github.com/mdks/motion-specwrap) to run the
-tests and report the correct exit value
-
-#### Objective-C Projects
-
-Objective-C projects are supported if you're using [Calabash](http://calaba.sh)
-
-##### [project root]/.bait/test.sh
-```bash
-#!/bin/bash
-bait_dir=$(dirname $0)
-project_dir="$bait_dir/.."
-cd $project_dir
-
-export BUNDLE_GEMFILE=./Gemfile
-
-echo "bundling"
-bundle install > /dev/null 2>&1
-
-# The following will create screenshots and html report in report/
-# It will also output to the console as usual for display in bait
-SCREENSHOT_PATH=./report/ cucumber --format 'Calabash::Formatters::Html' \
-  --out report/index.html \
-  --format pretty --
-```
-
-#### Other Projects
-
-Create a file `.bait/test.sh` and `exit 0` if it passes or non-zero if
-it does not pass. Output whatever you want to STDOUT or STDERR.
-
-Feel free to send pull requests with examples if you end up using bait.
-
-# Future Goals
-
-## Static Code Analysis
-
-Integrate [metric-fu](http://metric-fu.rubyforge.org/) for ruby apps and [OCLint](http://oclint.org/) for objective-c apps, JSLint and JSure for javascript.
+Please send pull requests with script examples if you use bait.

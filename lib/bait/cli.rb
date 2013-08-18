@@ -6,7 +6,7 @@ module Bait
       * bait .................... alias for bait server
       * bait server ............. start the bait server
       * bait init ............... setup current directory as a bait project
-      * bait test ............... simulate this repo being tested with bait}
+      * bait test <name> ........ execute a script in .bait/*}
 
     ##
     # Start the server
@@ -18,23 +18,7 @@ module Bait
       require 'bait/api'
       Bait::Api.run!
     end
-
-    ##
-    # Run the test suite script in .bait/test.sh
-    def self.test
-      script = File.join(Dir.pwd, ".bait", "test.sh")
-      unless File.executable? script
-        puts "Project did not have executable #{script}"
-        puts "Run 'bait init' to create it"
-        exit 1
-      else
-        system script
-        status = $?.exitstatus
-        puts "exited with status #{status}"
-        exit status
-      end
-    end
-
+    
     ##
     # Create .bait/ and list.yml and example .bait/test.sh
     # I do not seek to read your mind, instead I'd prefer that 
@@ -54,10 +38,62 @@ module Bait
           f.puts "exit 1"
         end
         File.chmod(0744, script)
-        puts "Created executable script #{script}. Test it \
-          with bait test or commit and run the server and clone this repo."
+        puts "Created executable script #{script}."
+        name = File.basename(script)
+        yml_file = File.join(bait_dir, 'bire.yml')
+        File.open(yml_file, "w") do |f|
+          f.puts "---"
+          f.puts "- #{name}"
+        end
+        puts "Setup one phase in #{yml_file} pointing to #{name}."
       end
     end
+
+    ##
+    # Run a defined phase
+    def self.test name=nil
+      dir = Dir.pwd, ".bait"
+      yml = File.join(dir, "bire.yml")
+      if File.exists? yml
+        require 'yaml'
+        scripts = YAML.load_file(yml)
+        if scripts.empty?
+          puts "Define your scripts in #{yml}"
+          exit 1
+        end
+        runscript = proc do |script, quit|
+          puts "Running #{script}"
+          system script
+          status = $?.exitstatus
+          puts "Exited with status #{status}"
+          exit status if quit
+        end
+        if name
+          script = File.join(dir, name)
+          scripts.select do |a|
+            if a == name
+              unless File.executable? script
+                puts "Missing executable #{script}"
+                exit 1
+              else
+                runscript.call(script)
+              end
+            end
+          end
+          puts "Script #{script} not defined in #{yml}"
+          exit 1
+        else
+          puts "Running all defined in #{yml}"
+          scripts.each do |name|
+            script = File.join(dir, name)
+            runscript.call(script, false)
+          end
+        end
+      else
+        puts "Project did not have configuration file #{yml}"
+        exit 1
+      end
+    end 
 
     def self.method_missing method
       unless method.to_sym == :help
