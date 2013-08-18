@@ -41,7 +41,7 @@ module Bait
     end
 
     def execute_subprocess &block
-      zerostatus = false
+      zerostatus = 'unknown'
       block.call("\nExecuting #{@script}\n\n")
       Open3.popen2e(@script) do |stdin, oe, wait_thr|
         oe.each {|line| block.call(line) }
