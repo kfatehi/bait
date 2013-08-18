@@ -67,7 +67,7 @@ describe Bait::Api do
   describe "GET /" do
     before { get '/' }
     it "renders the loading screen" do
-      subject.body.should match /Loading/
+      subject.body.should_not match /Loading/
     end
   end
 
