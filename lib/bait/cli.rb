@@ -36,7 +36,9 @@ module Bait
     end
 
     ##
-    # Create .bait/ and executable .bait/test.sh
+    # Create .bait/ and list.yml and example .bait/test.sh
+    # I do not seek to read your mind, instead I'd prefer that 
+    # you contribute Scripts for different Contexts/Technologies
     def self.init
       bait_dir = File.join(Dir.pwd, ".bait")
       if File.directory? bait_dir
@@ -47,10 +49,13 @@ module Bait
         puts "Created #{bait_dir}"
         File.open(script, 'w') do |f|
           f.puts "#!/bin/bash"
-          f.puts "echo edit me"
+          f.puts "echo 'Running tests. Oh no tests.'"
+          f.puts "echo 0 examples, 1 failure"
+          f.puts "exit 1"
         end
         File.chmod(0744, script)
-        puts "Created executable script #{script}"
+        puts "Created executable script #{script}. Test it \
+          with bait test or commit and run the server and clone this repo."
       end
     end
 
