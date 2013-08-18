@@ -42,25 +42,25 @@ module Bait
 
     def enter_phase name
       Bait::Phase.new(self.script(name)).on(:init) do
-        self.status = "phase: #{name}"
-        self.save
-        self.broadcast(:status, self.status)
+        self.broadcast(:status, "phase: #{name}")
       end.on(:output) do |line|
         self.output << line
         self.broadcast(:output, line)
       end.on(:missing) do |message|
         self.output << message
-        self.status = "missing: #{name}"
+        self.broadcast(:status, "missing: #{name}")
         self.save
       end.on(:done) do |zerostatus|
-        if zerostatus
-          self.status = "passed"
-        else
-          self.status = "failed"
+        unless self.status == "failed"
+          if zerostatus
+            self.status = "passed"
+          else
+            self.status = "failed"
+          end
+          self.save
+          check_for_simplecov
         end
-        self.save
         self.broadcast(:status, self.status)
-        check_for_simplecov
       end.run!
     end
 

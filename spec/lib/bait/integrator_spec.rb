@@ -36,9 +36,6 @@ describe Bait::Integrator do
       it "has errors in output" do
         build.reload.output.should match /was expected but is missing/
       end
-      it "has a useful status" do
-        build.reload.status.should eq "missing: coffeelint.rb"
-      end
     end
 
     context "has a test script" do
