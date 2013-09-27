@@ -2,7 +2,6 @@ Bait
 ====
 
 executable is `bait`, standing for Build And Integration Tester
-I'm conflicted about the name, another is artci: Application-Readiness-Test-based Continuous Integration
 
 The most important thing to know about this project is this:
 
@@ -37,6 +36,11 @@ Go to 0.0.0.0:8417
 You can set your Github to notify the server on that port.
 
 You may also test manually by inputting a clone URL within the UI
+
+# Caution
+
+* There is no security setup at this time
+* Bait is currently a WIP and should be considered experimental software
 
 # Architectural Overview
 

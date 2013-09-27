@@ -20,7 +20,7 @@ module Bait
     end
     
     ##
-    # Create .bait/ and list.yml and example .bait/test.sh
+    # Create .bait/ and config.yml and example .bait/test.sh
     # I do not seek to read your mind, instead I'd prefer that 
     # you contribute Scripts for different Contexts/Technologies
     def self.init
@@ -40,12 +40,12 @@ module Bait
         File.chmod(0744, script)
         puts "Created executable script #{script}."
         name = File.basename(script)
-        yml_file = File.join(bait_dir, 'bire.yml')
-        File.open(yml_file, "w") do |f|
+        config_file = File.join(bait_dir, 'config.yml')
+        File.open(config_file, "w") do |f|
           f.puts "---"
           f.puts "- #{name}"
         end
-        puts "Setup one phase in #{yml_file} pointing to #{name}."
+        puts "Setup one phase in #{config_file} pointing to #{name}."
       end
     end
 
@@ -53,12 +53,12 @@ module Bait
     # Run a defined phase
     def self.test name=nil
       dir = Dir.pwd, ".bait"
-      yml = File.join(dir, "bire.yml")
-      if File.exists? yml
+      config_file = File.join(dir, "config.yml")
+      if File.exists? config_file
         require 'yaml'
-        scripts = YAML.load_file(yml)
+        scripts = YAML.load_file(config_file)
         if scripts.empty?
-          puts "Define your scripts in #{yml}"
+          puts "Define your scripts in #{config_file}"
           exit 1
         end
         runscript = proc do |script, quit|
@@ -80,17 +80,17 @@ module Bait
               end
             end
           end
-          puts "Script #{script} not defined in #{yml}"
+          puts "Script #{script} not defined in #{config_file}"
           exit 1
         else
-          puts "Running all defined in #{yml}"
+          puts "Running all defined in #{config_file}"
           scripts.each do |name|
             script = File.join(dir, name)
             runscript.call(script, false)
           end
         end
       else
-        puts "Project did not have configuration file #{yml}"
+        puts "Project did not have configuration file #{config_file}"
         exit 1
       end
     end 

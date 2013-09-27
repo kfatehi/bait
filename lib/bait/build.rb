@@ -37,7 +37,7 @@ module Bait
     end
 
     def phases
-      YAML.load_file(File.join(self.bait_dir, "bire.yml"))
+      YAML.load_file(File.join(self.bait_dir, "config.yml"))
     end
 
     def enter_phase name
