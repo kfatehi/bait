@@ -10,11 +10,16 @@ module Bait
 
     ##
     # Start the server
-    def self.server
+    def self.server username=false, password=false
       puts "** Bait/#{Bait::VERSION} booting up in #{Bait.env} environment"
       if Bait.env == "production" && Bait.assets.missing?
         Bait.assets.compile!
       end
+      require 'pry'
+      binding.pry
+      if username && password
+        $HTTP_AUTH = {username:username, password:password}
+      end 
       require 'bait/api'
       Bait::Api.run!
     end
