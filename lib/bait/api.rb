@@ -11,19 +11,6 @@ module Bait
     set :port, 8417
     set server: 'thin'
 
-    def self.new(*)
-      if $HTTP_AUTH
-        puts "** Using HTTP Digest Auth"
-        app = Rack::Auth::Digest::MD5.new(super) do |username|
-          {$HTTP_AUTH[:username] => $HTTP_AUTH[:password]}[username]
-        end
-        app.realm = 'Protected Area'
-        app.opaque = 'secretkey'
-      else
-        app
-      end
-    end
-
     if Bait.assets.dynamic?
       Bait.assets.remove!
       require 'sinatra/asset_snack'
