@@ -56,6 +56,7 @@ describe Bait::Api do
       it "creates a build" do
         build.name.should eq "github"
         build.owner_name.should eq "defunkt"
+        build.clone_url.should eq "git@github.com:defunkt/github"
         build.owner_email.should eq "chris@ozmm.org"
         build.ref.should eq "refs/heads/master"
       end

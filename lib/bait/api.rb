@@ -26,10 +26,12 @@ module Bait
     post '/' do
       if params && params["payload"]
         push = JSON.parse(params["payload"])
+        name = push["repository"]["name"]
+        owner_name = push["repository"]["owner"]["name"]
         Build.create({
-          name: push["repository"]["name"],
-          clone_url: push["repository"]["url"],
-          owner_name: push["repository"]["owner"]["name"],
+          name: name,
+          clone_url: "git@github.com:#{owner_name}/#{name}",
+          owner_name: owner_name,
           owner_email: push["repository"]["owner"]["email"],
           ref: push["ref"]
         }).integrate_later
