@@ -35,6 +35,7 @@ end
 namespace :gem do
   task :build do
     `bundle install`
+    Rake::Task['assets:precompile'].invoke
     Rake::Task['git:dirty'].invoke
     if !git_master?
       puts "I'll only build the gem on the master branch"
@@ -45,7 +46,6 @@ namespace :gem do
         puts "Uhh.. you have failing specs -- not building the gem"
       else
         puts "Specs pass. you're ready"
-        Rake::Task['assets:precompile'].invoke
         Rake::Task['git:dirty'].invoke
         puts `gem build bait.gemspec`
         puts "Done! You can gem push that now"
@@ -53,7 +53,7 @@ namespace :gem do
     end
   end
 
-  task :push => :build do
+  task :publish => :build do
     require "bait/version"
     gem = "bait-#{Bait::VERSION}.gem"
     if File.exists?(gem)

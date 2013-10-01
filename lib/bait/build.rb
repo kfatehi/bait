@@ -16,7 +16,7 @@ module Bait
       Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
     attribute :simplecov, Boolean, default: false
-    attribute :ref, String, default: "master"
+    attribute :ref, String, default: "refs/heads/master"
     attribute :owner_name, String
     attribute :owner_email, String
     attribute :name, String
@@ -37,7 +37,7 @@ module Bait
     end
 
     def branch
-      self.ref
+      self.ref.gsub('refs/heads/', '')
     end
 
     def summary
@@ -95,8 +95,9 @@ module Bait
       end
       begin
         g = Git.clone(clone_url, name, :path => sandbox_directory)
-        g.branch(self.branch)
-        return g.branch.to_s
+        if g.branch.name != self.branch
+          g.checkout("origin/#{self.branch}")
+        end
       rescue => ex
         msg = "Failed to clone #{clone_url}"
         self.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace.join("\n")}"
