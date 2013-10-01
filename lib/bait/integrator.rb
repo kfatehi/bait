@@ -14,6 +14,7 @@ module Bait
           @build.phases.each do |script|
             @build.enter_phase script
           end
+          Bait.console.puts @build.summary
         end
       end
     end

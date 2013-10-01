@@ -36,4 +36,10 @@ describe Bait do
       end
     end
   end
+
+  describe "#console" do
+    it "provides access to STDOUT" do
+      Bait.console.should eq STDOUT
+    end
+  end
 end

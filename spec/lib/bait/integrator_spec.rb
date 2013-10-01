@@ -6,6 +6,9 @@ def expect_event(*args)
 end
 
 describe Bait::Integrator do
+  before do
+    Bait.console.stub(:puts)
+  end
   let(:build) { Bait::Build.create(name: "bait", clone_url:repo_path) }
   let(:worker) { Bait::Integrator.new }
 
@@ -23,8 +26,11 @@ describe Bait::Integrator do
         expect_event(:status, build.id, 'phase: coffeelint.rb')
         expect_event(:output, build.id, kind_of(String)).exactly(2).times
         expect_event(:status, build.id, 'passed').exactly(2).times
-        worker.perform build.id
       end
+      it "writes summary output to the console" do
+        Bait.console.should_receive(:puts).with "bait (n/a) passed"
+      end
+      after { worker.perform build.id }
     end
 
     context "a script is missing" do

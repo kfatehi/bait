@@ -36,6 +36,11 @@ module Bait
       self.cleanup!
     end
 
+    def summary
+      branch = self.ref ? self.ref.split('/').last : "n/a"
+      %{#{self.name} (#{branch}) #{self.status}}
+    end
+
     def phases
       YAML.load_file(File.join(self.bait_dir, "config.yml"))
     end

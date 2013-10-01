@@ -150,4 +150,10 @@ describe Bait::Build do
       build.phases.should eq ["foo.py", "bar.php"]
     end
   end
+
+  describe "#summary" do
+    it "formats name, branch, and status" do
+      build.summary.should match /.+ \(.+\) .+/
+    end
+  end
 end

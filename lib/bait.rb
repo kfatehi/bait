@@ -43,6 +43,10 @@ module Bait
     def public
       Pathname.new(File.join(File.dirname(__FILE__), 'bait', 'public'))
     end
+
+    def console
+      STDOUT
+    end
   end
 end
 
