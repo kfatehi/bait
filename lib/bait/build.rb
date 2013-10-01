@@ -37,15 +37,7 @@ module Bait
     end
 
     def branch
-      parts = self.ref.split('/')
-      if parts.size > 3
-binding.pry
-        parts[-(parts.size+1)..-1].join('/')
-      elsif parts.size > 1
-        parts[-1..-1].join('/')
-      else
-        parts.join('/')
-      end
+      self.ref
     end
 
     def summary
