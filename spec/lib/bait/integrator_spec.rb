@@ -28,7 +28,7 @@ describe Bait::Integrator do
         expect_event(:status, build.id, 'passed').exactly(2).times
       end
       it "writes summary output to the console" do
-        Bait.console.should_receive(:puts).with "bait (n/a) passed"
+        Bait.console.should_receive(:puts).with "\e[32mbait (master) passed\e[0m"
       end
       after { worker.perform build.id }
     end

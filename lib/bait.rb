@@ -3,6 +3,11 @@ require 'moneta'
 require 'fileutils'
 require 'bait/assets'
 require 'pathname'
+require 'term/ansicolor'
+
+class String
+  include Term::ANSIColor
+end
 
 module Bait
   class << self

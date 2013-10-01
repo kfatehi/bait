@@ -35,4 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "haml"
   spec.add_runtime_dependency "thin"
   spec.add_runtime_dependency "sucker_punch"
+  spec.add_runtime_dependency "term-ansicolor"
 end

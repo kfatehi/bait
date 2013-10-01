@@ -16,7 +16,7 @@ module Bait
       Moneta.new(:YAML, :file => Bait.db_file('builds'))
 
     attribute :simplecov, Boolean, default: false
-    attribute :ref, String
+    attribute :ref, String, default: "master"
     attribute :owner_name, String
     attribute :owner_email, String
     attribute :name, String
@@ -38,7 +38,15 @@ module Bait
 
     def summary
       branch = self.ref ? self.ref.split('/').last : "n/a"
-      %{#{self.name} (#{branch}) #{self.status}}
+      output = %{#{self.name} (#{branch}) #{self.status}}
+      case self.status
+      when "passed"
+        output.green
+      when "failed"
+        output.red  
+      else
+        output
+      end 
     end
 
     def phases
