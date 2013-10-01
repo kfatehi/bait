@@ -82,9 +82,15 @@ describe Bait::Build do
 
   describe "#clone!" do
     context 'valid clone url' do
-      before { build.clone_url = repo_path ; build.clone! }
+      before do
+        build.clone_url = repo_path
+        @current_branch = build.clone!
+      end
       specify { build.output.should_not match /Failed to clone/ }
       specify { build.should be_cloned }
+      it "should be on the correct branch" do
+        @current_branch.should eq build.branch
+      end
     end
     context "invalid clone url" do
       before { build.clone_url = "invalid" ; build.clone! }
@@ -154,6 +160,25 @@ describe Bait::Build do
   describe "#summary" do
     it "formats name, branch, and status" do
       build.summary.should match /.+ \(.+\) .+/
+    end
+  end
+
+  describe "#branch" do
+    it "supports refs/heads/foo/bar style" do
+      build.ref = "refs/heads/foo/bar/baz"
+      build.branch.should eq "foo/bar/baz"
+    end
+    it "supports refs/heads/foo/bar style" do
+      build.ref = "refs/heads/foo/bar"
+      build.branch.should eq "foo/bar"
+    end
+    it "supports mybranch style" do
+      build.ref = "single"
+      build.branch.should eq "single"
+    end
+    it "supports refs/heads/mybranch style" do
+      build.ref = "refs/heads/triple"
+      build.branch.should eq "triple"
     end
   end
 end

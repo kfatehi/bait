@@ -36,9 +36,20 @@ module Bait
       self.cleanup!
     end
 
+    def branch
+      parts = self.ref.split('/')
+      if parts.size > 3
+binding.pry
+        parts[-(parts.size+1)..-1].join('/')
+      elsif parts.size > 1
+        parts[-1..-1].join('/')
+      else
+        parts.join('/')
+      end
+    end
+
     def summary
-      branch = self.ref ? self.ref.split('/').last : "n/a"
-      output = %{#{self.name} (#{branch}) #{self.status}}
+      output = %{#{self.name} (#{self.branch}) #{self.status}}
       case self.status
       when "passed"
         output.green
@@ -91,7 +102,9 @@ module Bait
         FileUtils.mkdir_p sandbox_directory
       end
       begin
-        Git.clone(clone_url, name, :path => sandbox_directory)
+        g = Git.clone(clone_url, name, :path => sandbox_directory)
+        g.branch(self.branch)
+        return g.branch.to_s
       rescue => ex
         msg = "Failed to clone #{clone_url}"
         self.output << "#{msg}\n\n#{ex.message}\n\n#{ex.backtrace.join("\n")}"
